@@ -226,19 +226,18 @@ class Orders(Document):
 
         return True
 
-    def add_or_update_sale_to_order(self, date,element_id, quantity):
+    def add_or_update_sale_to_order(self, date, element_id, quantity):
 
         for order in self.orders:
             if order.date == date:
                 if not order.add_sale(element_id, quantity):
                     order.modify_sale(element_id, quantity)
 
-                self.save()
+
                 return True
 
         order = self.add_order(date)
         order.add_sale(element_id, quantity)
-        self.save()
 
         return True
 

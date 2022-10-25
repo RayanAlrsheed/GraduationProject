@@ -356,8 +356,11 @@ def extract_sales(file):
 
 
 @router.post("/upload")
-def upload_file(file: UploadFile = File()):
+def upload_file(file: UploadFile = File(),  authorize: AuthJWT = Depends()):
+    authorize.jwt_required()
     try:
+        orders = models.Orders.objects.get(user_id=ObjectId(authorize.get_jwt_subject()))
+
         content = file.file.read()
 
         buffer = StringIO(content.decode("utf-8"))
@@ -365,7 +368,8 @@ def upload_file(file: UploadFile = File()):
         csv_reader = csv.reader(buffer)
         for row in csv_reader:
             element_id, quantity, time = row[:3]
-            print(element_id, quantity, time)
+            orders.add_or_update_sale_to_order(datetime.strptime(time, "%m/%d/%Y").date(), element_id, float(quantity))
+        orders.save()
     except Exception as e:
         print(e)
         return RedirectResponse("/upload?error=file", status_code=status.HTTP_302_FOUND)
