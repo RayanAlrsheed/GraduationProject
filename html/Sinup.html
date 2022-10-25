@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Sign up</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href={{ url_for('auth_static', path='images/icons/favicon.ico') }} />
+	
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href={{ url_for('auth_static', path='vendor/bootstrap/css/bootstrap.min.css') }}>
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href={{ url_for('auth_static', path='fonts/font-awesome-4.7.0/css/font-awesome.min.css') }}>
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href={{ url_for('auth_static', path='vendor/animate/animate.css') }}>
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href={{ url_for('auth_static', path='vendor/css-hamburgers/hamburgers.min.css') }}>
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href={{ url_for('auth_static', path='vendor/animsition/css/animsition.min.css') }}>
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href={{ url_for('auth_static', path='vendor/select2/select2.min.css') }}>
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href={{ url_for('auth_static', path='vendor/daterangepicker/daterangepicker.css') }}>
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href={{ url_for('auth_static', path='css/util.css') }}>
+	<link rel="stylesheet" type="text/css" href={{ url_for('auth_static', path='css/main.css') }}>
+	<!--===============================================================================================-->
+</head>
+
+<body>
+
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100">
+
+				<form class="login100-form validate-form p-l-55 p-r-55 p-t-178" method="post" action="api/register">
+					<span class="login100-form-title" style="background-color: #241c5c;">
+						Sign Up
+					</span>
+
+
+					<div class="wrap-input100 validate-input m-b-16" data-validate="Please enter your name">
+						<input class="input100" type="text" name="first_name" placeholder="First Name">
+						<span class="focus-input100"></span>
+
+					</div>
+
+					<div class="wrap-input100 validate-input m-b-16" data-validate="Please enter your last name">
+						<input class="input100" type="text" name="last_name" placeholder="Last Name">
+						<span class="focus-input100"></span>
+					</div>
+
+
+					<div class="wrap-input100 validate-input m-b-16" data-validate="Please enter phone number">
+						<input class="input100" type="tel" name="phone" placeholder="Phone Number">
+						<span class="focus-input100"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input m-b-16" data-validate="Please enter your city">
+						<select class="input100" type="text" name="location" placeholder="Location">
+							<option disabled> Select your city</option>
+							<option selected> Riyadh</option>
+							<option> Jeddah</option>
+						</select>
+
+						<span class="focus-input100"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input m-b-16" data-validate="Please enter email">
+						<input class="input100" type="text" name="email" placeholder="Email">
+						<span class="focus-input100"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate="Please enter password">
+						<input class="input100" type="password" name="password" placeholder="Password">
+						<span class="focus-input100"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input mt-3" data-validate="Please enter confirmation password">
+						<input class="input100" type="password" name="password2" placeholder="Confirm Password">
+						<span class="focus-input100"></span>
+					</div>
+
+
+
+
+					<!--					<div class="text-right p-t-13 p-b-23">-->
+					<!--						<span class="txt1">-->
+					<!--							Forgot-->
+					<!--						</span>-->
+
+					<!--						<a href={{ url_for('auth_static', path='#') }} class="txt2">-->
+					<!--							Username / Password?-->
+					<!--						</a>-->
+					<!--					</div>-->
+
+					<div class="container-login100-form-btn mt-5 mb-5">
+						<button class="login100-form-btn" style="background-color: #241c5c;">
+							Sign up
+						</button>
+					</div>
+
+
+					<div class="flex-col-c p-t-1 p-b-40">
+						<span class="txt1 p-b-9">
+							You have an account?
+						</span>
+
+						<a href="/login" class="txt3" style="color: #241c5c;">
+							Sign in now
+						</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+	<!--===============================================================================================-->
+	<script src={{ url_for('auth_static', path='vendor/jquery/jquery-3.2.1.min.js') }}></script>
+	<!--===============================================================================================-->
+	<script src={{ url_for('auth_static', path='vendor/animsition/js/animsition.min.js') }}></script>
+	<!--===============================================================================================-->
+	<script src={{ url_for('auth_static', path='vendor/bootstrap/js/popper.js') }}></script>
+	<script src={{ url_for('auth_static', path='vendor/bootstrap/js/bootstrap.min.js') }}></script>
+	<!--===============================================================================================-->
+	<script src={{ url_for('auth_static', path='vendor/select2/select2.min.js') }}></script>
+	<!--===============================================================================================-->
+	<script src={{ url_for('auth_static', path='vendor/daterangepicker/moment.min.js') }}></script>
+	<script src={{ url_for('auth_static', path='vendor/daterangepicker/daterangepicker.js') }}></script>
+	<!--===============================================================================================-->
+	<script src={{ url_for('auth_static', path='vendor/countdowntime/countdowntime.js') }}></script>
+	<!--===============================================================================================-->
+	<script src={{ url_for('auth_static', path='js/main.js') }}></script>
+
+</body>
+{% if message%}
+	<script>
+		alert("{{message}}")
+	</script>
+{% endif %}
+</html>

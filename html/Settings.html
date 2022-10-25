@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>حفظ النعمة</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href={{ url_for('static', path='vendors/mdi/css/materialdesignicons.min.css') }}>
+    <link rel="stylesheet" href={{ url_for('static', path='vendors/css/vendor.bundle.base.css') }}>
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href={{ url_for('static', path='vendors/flag-icon-css/css/flag-icon.min.css') }}>
+    <link rel="stylesheet" href={{ url_for('static', path='vendors/jvectormap/jquery-jvectormap.css') }}>
+    <!-- End plugin css for this page -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href={{ url_for('static', path='css/demo/style.css') }}>
+    <!-- End layout styles -->
+    <!--    <link rel="shortcut icon" href={{ url_for('static', path='images/favicon.png') }}/>-->
+</head>
+
+<body>
+    <script src={{ url_for('static', path='js/preloader.js') }}></script>
+    <div class="body-wrapper">
+        <!-- partial:partials/_sidebar.html -->
+        <aside class="mdc-drawer mdc-drawer--dismissible mdc-drawer--open">
+            <div class="mdc-drawer__header">
+                <a href="/" class="brand-logo">
+                    <!--       replace logo
+     Abdulrahman put logo here in "SRC" tag of image
+     -->
+                    <!--                <img src={{ url_for('static', path='images/logo.svg') }} alt="logo">-->
+                </a>
+            </div>
+            <div class="mdc-drawer__content">
+                <div class="user-info">
+                    <p class="name">حفظ النعمة</p>
+                </div>
+                <div class="mdc-list-group">
+                    <nav class="mdc-list mdc-drawer-menu">
+                        <div class="mdc-list-item mdc-drawer-item">
+                            <a class="mdc-drawer-link" href="/">
+                                <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon"
+                                    aria-hidden="true">home</i>
+                                Dashboard
+                            </a>
+                        </div>
+                        <div class="mdc-list-item mdc-drawer-item">
+                            <a class="mdc-drawer-link" href="/menu">
+                                <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon"
+                                    aria-hidden="true">track_changes</i>
+                                Menu
+                            </a>
+                        </div>
+                        <div class="mdc-list-item mdc-drawer-item">
+                            <a class="mdc-drawer-link" href="/charity">
+                                <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon"
+                                    aria-hidden="true">grid_on</i>
+                                Charity
+                            </a>
+                        </div>
+                        <div class="mdc-list-item mdc-drawer-item">
+                            <a class="mdc-drawer-link" href="/sales">
+                                <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon"
+                                aria-hidden="true">grid_on</i>
+                                sales
+                            </a>
+                        </div>
+                        <div class="mdc-list-item mdc-drawer-item">
+                            <a class="mdc-drawer-link" href="/upload">
+                                <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon"
+                                    aria-hidden="true">grid_on</i>
+                                Upload Data
+                            </a>
+                        </div>
+                        <div class="mdc-list-item mdc-drawer-item">
+                            <a class="mdc-drawer-link active" href="/settings">
+                                <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon"
+                                    aria-hidden="true">pie_chart_outlined</i>
+                                Settings
+                            </a>
+                        </div>
+                        <div class="mdc-list-item mdc-drawer-item">
+                            <a class="mdc-drawer-link" href="/logout">
+                                <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon"
+                                    aria-hidden="true">pie_chart_outlined</i>
+                                Sign out
+                            </a>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </aside>
+        <!-- partial -->
+        <div class="main-wrapper mdc-drawer-app-content">
+            <!-- partial:partials/_navbar.html -->
+            <header class="mdc-top-app-bar">
+                <div class="mdc-top-app-bar__row">
+                    <div class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                        <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button sidebar-toggler">
+                            menu
+                        </button>
+                        <span class="mdc-top-app-bar__title">Greetings Ahmad!</span>
+                        <!--                    <div-->
+                        <!--                        class="mdc-text-field mdc-text-field&#45;&#45;outlined mdc-text-field&#45;&#45;with-leading-icon search-text-field d-none d-md-flex">-->
+                        <!--                        <i class="material-icons mdc-text-field__icon">search</i>-->
+                        <!--                        <input class="mdc-text-field__input" id="text-field-hero-input">-->
+                        <!--                        <div class="mdc-notched-outline">-->
+                        <!--                            <div class="mdc-notched-outline__leading"></div>-->
+                        <!--                            <div class="mdc-notched-outline__notch">-->
+                        <!--                                <label for="text-field-hero-input" class="mdc-floating-label">Search..</label>-->
+                        <!--                            </div>-->
+                        <!--                            <div class="mdc-notched-outline__trailing"></div>-->
+                        <!--                        </div>-->
+                        <!--                    </div>-->
+                    </div>
+                    <div
+                        class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end mdc-top-app-bar__section-right">
+                        <div class="menu-button-container menu-profile d-none d-md-block">
+                            <button class="mdc-button mdc-menu-button">
+                                <span class="d-flex align-items-center">
+                                    <span class="figure">
+                                        <!--                    <img src={{ url_for('static', path='images/faces/face1.jpg') }} alt="user" class="user">-->
+                                    </span>
+                                    <span class="user-name">Ahmed Alrashed</span>
+                                </span>
+                            </button>
+                            <!--                        <div class="mdc-menu mdc-menu-surface" tabindex="-1">-->
+                            <!--                            <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">-->
+                            <!--                                <li class="mdc-list-item" role="menuitem">-->
+                            <!--                                    <div class="item-thumbnail item-thumbnail-icon-only">-->
+                            <!--                                        <i class="mdi mdi-account-edit-outline text-primary"></i>-->
+                            <!--                                    </div>-->
+                            <!--                                    <div-->
+                            <!--                                        class="item-content d-flex align-items-start flex-column justify-content-center">-->
+                            <!--                                        <h6 class="item-subject font-weight-normal">Edit profile</h6>-->
+                            <!--                                    </div>-->
+                            <!--                                </li>-->
+                            <!--                                <li class="mdc-list-item" role="menuitem">-->
+                            <!--                                    <div class="item-thumbnail item-thumbnail-icon-only">-->
+                            <!--                                        <i class="mdi mdi-settings-outline text-primary"></i>-->
+                            <!--                                    </div>-->
+                            <!--                                    <div-->
+                            <!--                                        class="item-content d-flex align-items-start flex-column justify-content-center">-->
+                            <!--                                        <h6 class="item-subject font-weight-normal">Logout</h6>-->
+                            <!--                                    </div>-->
+                            <!--                                </li>-->
+                            <!--                            </ul>-->
+                            <!--                        </div>-->
+                        </div>
+                        <div class="divider d-none d-md-block"></div>
+                        <div class="menu-button-container d-none d-md-block">
+                            <!--                        <button class="mdc-button mdc-menu-button">-->
+                            <!--                            <i class="mdi mdi-settings"></i>-->
+                            <!--                        </button>-->
+                            <!--                        <div class="mdc-menu mdc-menu-surface" tabindex="-1">-->
+                            <!--                            <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">-->
+                            <!--                                <li class="mdc-list-item" role="menuitem">-->
+                            <!--                                    <div class="item-thumbnail item-thumbnail-icon-only">-->
+                            <!--                                        <i class="mdi mdi-alert-circle-outline text-primary"></i>-->
+                            <!--                                    </div>-->
+                            <!--                                    <div-->
+                            <!--                                        class="item-content d-flex align-items-start flex-column justify-content-center">-->
+                            <!--                                        <h6 class="item-subject font-weight-normal">Settings</h6>-->
+                            <!--                                    </div>-->
+                            <!--                                </li>-->
+                            <!--                                <li class="mdc-list-item" role="menuitem">-->
+                            <!--                                    <div class="item-thumbnail item-thumbnail-icon-only">-->
+                            <!--                                        <i class="mdi mdi-progress-download text-primary"></i>-->
+                            <!--                                    </div>-->
+                            <!--                                    <div-->
+                            <!--                                        class="item-content d-flex align-items-start flex-column justify-content-center">-->
+                            <!--                                        <h6 class="item-subject font-weight-normal">Update</h6>-->
+                            <!--                                    </div>-->
+                            <!--                                </li>-->
+                            <!--                            </ul>-->
+                            <!--                        </div>-->
+                            <!--                    </div>-->
+                            <!--                    <div class="menu-button-container">-->
+                            <!--                        <button class="mdc-button mdc-menu-button">-->
+                            <!--                            <i class="mdi mdi-bell"></i>-->
+                            <!--                        </button>-->
+                            <!--                        <div class="mdc-menu mdc-menu-surface" tabindex="-1">-->
+                            <!--                            <h6 class="title"><i class="mdi mdi-bell-outline mr-2 tx-16"></i> Notifications</h6>-->
+                            <!--                            <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">-->
+                            <!--                                <li class="mdc-list-item" role="menuitem">-->
+                            <!--                                    <div class="item-thumbnail item-thumbnail-icon">-->
+                            <!--                                        <i class="mdi mdi-email-outline"></i>-->
+                            <!--                                    </div>-->
+                            <!--                                    <div-->
+                            <!--                                        class="item-content d-flex align-items-start flex-column justify-content-center">-->
+                            <!--                                        <h6 class="item-subject font-weight-normal">You received a new message</h6>-->
+                            <!--                                        <small class="text-muted"> 6 min ago </small>-->
+                            <!--                                    </div>-->
+                            <!--                                </li>-->
+                            <!--                                <li class="mdc-list-item" role="menuitem">-->
+                            <!--                                    <div class="item-thumbnail item-thumbnail-icon">-->
+                            <!--                                        <i class="mdi mdi-account-outline"></i>-->
+                            <!--                                    </div>-->
+                            <!--                                    <div-->
+                            <!--                                        class="item-content d-flex align-items-start flex-column justify-content-center">-->
+                            <!--                                        <h6 class="item-subject font-weight-normal">New user registered</h6>-->
+                            <!--                                        <small class="text-muted"> 15 min ago </small>-->
+                            <!--                                    </div>-->
+                            <!--                                </li>-->
+                            <!--                                <li class="mdc-list-item" role="menuitem">-->
+                            <!--                                    <div class="item-thumbnail item-thumbnail-icon">-->
+                            <!--                                        <i class="mdi mdi-alert-circle-outline"></i>-->
+                            <!--                                    </div>-->
+                            <!--                                    <div-->
+                            <!--                                        class="item-content d-flex align-items-start flex-column justify-content-center">-->
+                            <!--                                        <h6 class="item-subject font-weight-normal">System Alert</h6>-->
+                            <!--                                        <small class="text-muted"> 2 days ago </small>-->
+                            <!--                                    </div>-->
+                            <!--                                </li>-->
+                            <!--                                <li class="mdc-list-item" role="menuitem">-->
+                            <!--                                    <div class="item-thumbnail item-thumbnail-icon">-->
+                            <!--                                        <i class="mdi mdi-update"></i>-->
+                            <!--                                    </div>-->
+                            <!--                                    <div-->
+                            <!--                                        class="item-content d-flex align-items-start flex-column justify-content-center">-->
+                            <!--                                        <h6 class="item-subject font-weight-normal">You have a new update</h6>-->
+                            <!--                                        <small class="text-muted"> 3 days ago </small>-->
+                            <!--                                    </div>-->
+                            <!--                                </li>-->
+                            <!--                            </ul>-->
+                            <!--                        </div>-->
+                            <!--                    </div>-->
+                            <!--                    <div class="menu-button-container">-->
+                            <!--                        <button class="mdc-button mdc-menu-button">-->
+                            <!--                            <i class="mdi mdi-email"></i>-->
+                            <!--                            <span class="count-indicator">-->
+                            <!--                  <span class="count">3</span>-->
+                            <!--                </span>-->
+                            <!--                        </button>-->
+                            <!--                        <div class="mdc-menu mdc-menu-surface" tabindex="-1">-->
+                            <!--                            <h6 class="title"><i class="mdi mdi-email-outline mr-2 tx-16"></i> Messages</h6>-->
+                            <!--                            <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">-->
+                            <!--                                <li class="mdc-list-item" role="menuitem">-->
+                            <!--                                    <div class="item-thumbnail">-->
+                            <!--                                        <img src={{ url_for('static', path='images/faces/face4.jpg') }} alt="user">-->
+                            <!--                                    </div>-->
+                            <!--                                    <div-->
+                            <!--                                        class="item-content d-flex align-items-start flex-column justify-content-center">-->
+                            <!--                                        <h6 class="item-subject font-weight-normal">Mark send you a message</h6>-->
+                            <!--                                        <small class="text-muted"> 1 Minutes ago </small>-->
+                            <!--                                    </div>-->
+                            <!--                                </li>-->
+                            <!--                                <li class="mdc-list-item" role="menuitem">-->
+                            <!--                                    <div class="item-thumbnail">-->
+                            <!--                                        <img src={{ url_for('static', path='images/faces/face2.jpg') }} alt="user">-->
+                            <!--                                    </div>-->
+                            <!--                                    <div-->
+                            <!--                                        class="item-content d-flex align-items-start flex-column justify-content-center">-->
+                            <!--                                        <h6 class="item-subject font-weight-normal">Cregh send you a message</h6>-->
+                            <!--                                        <small class="text-muted"> 15 Minutes ago </small>-->
+                            <!--                                    </div>-->
+                            <!--                                </li>-->
+                            <!--                                <li class="mdc-list-item" role="menuitem">-->
+                            <!--                                    <div class="item-thumbnail">-->
+                            <!--                                        <img src={{ url_for('static', path='images/faces/face3.jpg') }} alt="user">-->
+                            <!--                                    </div>-->
+                            <!--                                    <div-->
+                            <!--                                        class="item-content d-flex align-items-start flex-column justify-content-center">-->
+                            <!--                                        <h6 class="item-subject font-weight-normal">Profile picture updated</h6>-->
+                            <!--                                        <small class="text-muted"> 18 Minutes ago </small>-->
+                            <!--                                    </div>-->
+                            <!--                                </li>-->
+                            <!--                            </ul>-->
+                            <!--                        </div>-->
+                            <!--                    </div>-->
+                            <!--                    <div class="menu-button-container d-none d-md-block">-->
+                            <!--                        <button class="mdc-button mdc-menu-button">-->
+                            <!--                            <i class="mdi mdi-arrow-down-bold-box"></i>-->
+                            <!--                        </button>-->
+                            <!--                        <div class="mdc-menu mdc-menu-surface" tabindex="-1">-->
+                            <!--                            <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">-->
+                            <!--                                <li class="mdc-list-item" role="menuitem">-->
+                            <!--                                    <div class="item-thumbnail item-thumbnail-icon-only">-->
+                            <!--                                        <i class="mdi mdi-lock-outline text-primary"></i>-->
+                            <!--                                    </div>-->
+                            <!--                                    <div-->
+                            <!--                                        class="item-content d-flex align-items-start flex-column justify-content-center">-->
+                            <!--                                        <h6 class="item-subject font-weight-normal">Lock screen</h6>-->
+                            <!--                                    </div>-->
+                            <!--                                </li>-->
+                            <!--                                <li class="mdc-list-item" role="menuitem">-->
+                            <!--                                    <div class="item-thumbnail item-thumbnail-icon-only">-->
+                            <!--                                        <i class="mdi mdi-logout-variant text-primary"></i>-->
+                            <!--                                    </div>-->
+                            <!--                                    <div-->
+                            <!--                                        class="item-content d-flex align-items-start flex-column justify-content-center">-->
+                            <!--                                        <h6 class="item-subject font-weight-normal">Logout</h6>-->
+                            <!--                                    </div>-->
+                            <!--                                </li>-->
+                            <!--                            </ul>-->
+                            <!--                        </div>-->
+                            <!--                    </div>-->
+                        </div>
+                    </div>
+            </header>
+            <!-- partial -->
+            <div class="page-wrapper mdc-toolbar-fixed-adjust">
+
+                <main role="main">
+                    <form action="/api/update_settings" method="POST">
+                    <div class="container">
+                        <div class="mdc-layout-grid">
+                            <div class="mdc-layout-grid__inner">
+                                <div class="mdc-layout-grid__cell--span-12">
+                                    <div class="mdc-card">
+                                        <h6 class="card-title">Settings</h6>
+                                        <div class="template-demo">
+                                            <div class="mdc-layout-grid__inner">
+
+                                                <div
+                                                    class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop">
+                                                    <div class="mdc-text-field">
+                                                        <input class="mdc-text-field__input"  name="first_name" id="text-field-hero-input" value="{{first_name}}" >
+                                                        <div class="mdc-line-ripple"></div>
+                                                        <label for="text-field-hero-input"
+                                                            class="mdc-floating-label">First Name</label>
+                                                    </div>
+                                                </div>
+
+                                                <div
+                                                    class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop">
+                                                    <div class="mdc-text-field">
+                                                        <input class="mdc-text-field__input" name="last_name" id="text-field-hero-input" value="{{last_name}}">
+                                                        <div class="mdc-line-ripple"></div>
+                                                        <label for="text-field-hero-input"
+                                                            class="mdc-floating-label">Last Name</label>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop">
+                                                    <div class="mdc-text-field">
+                                                        <input class="mdc-text-field__input" name="email" id="text-field-hero-input" value="{{email}}">
+                                                        <div class="mdc-line-ripple"></div>
+                                                        <label for="text-field-hero-input"
+                                                            class="mdc-floating-label">Email</label>
+                                                    </div>
+                                                    </div>
+                                                    <div
+                                                    class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop">
+                                                    <div class="mdc-text-field">
+                                                        <input class="mdc-text-field__input" name="phone" id="text-field-hero-input" value="{{phone}}">
+                                                        <div class="mdc-line-ripple"></div>
+                                                        <label for="text-field-hero-input"
+                                                            class="mdc-floating-label">phone</label>
+                                                    </div>
+                                                    </div>
+                                                    <div class="mdc-select mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop">
+                                                        <i class="mdc-select__dropdown-icon"></i>
+
+                                                        <select class="mdc-select__native-control" type="text" name="location" placeholder="Location">
+                                                            <option disabled> Select your city</option>
+                                                            <option {% if location == 'Riyadh' %} selected {% endif %}> Riyadh</option>
+                                                            <option {% if location == 'Jeddah' %} selected {% endif %}> Jeddah</option>
+                                                        </select>
+                                                    </div>
+                                                    <div
+                                                    class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop">
+                                                    
+                                                    </div>
+                                                <div
+                                                class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop">
+                                                <div class="mdc-text-field">
+                                                    <input class="mdc-text-field__input" name="password" id="text-field-hero-input" type="password">
+                                                    <div class="mdc-line-ripple"></div>
+                                                    <label for="text-field-hero-input"
+                                                        class="mdc-floating-label">Password</label>
+                                                </div>
+                                            </div>
+                                            <div
+                                            class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop">
+                                            <div class="mdc-text-field">
+                                                <input class="mdc-text-field__input" name="password2" id="text-field-hero-input" type="password">
+                                                <div class="mdc-line-ripple"></div>
+                                                <label for="text-field-hero-input"
+                                                    class="mdc-floating-label">Confirm password</label>
+                                            </div>
+                                        </div>
+
+
+
+
+                                            </div>
+                                            <button class="mdc-button mdc-button--raised w-100">
+                                                Update
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                </main>
+                <!--                        <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell&#45;&#45;span-12">-->
+                <!--                            <div class="mdc-card">-->
+                <!--                                <div class="d-flex justify-content-between">-->
+                <!--                                    <h4 class="card-title mb-0">Revenue by location</h4>-->
+                <!--                                    <div>-->
+                <!--                                        <i class="material-icons refresh-icon">refresh</i>-->
+                <!--                                        <i class="material-icons options-icon ml-2">more_vert</i>-->
+                <!--                                    </div>-->
+                <!--                                </div>-->
+                <!--                                <div class="d-block d-sm-flex justify-content-between align-items-center">-->
+                <!--                                    <h5 class="card-sub-title mb-2 mb-sm-0">Sales performance revenue based by-->
+                <!--                                        country</h5>-->
+                <!--                                    <div class="menu-button-container">-->
+                <!--                                        <button-->
+                <!--                                            class="mdc-button mdc-menu-button mdc-button&#45;&#45;raised button-box-shadow tx-12 text-dark bg-white font-weight-light">-->
+                <!--                                            Last 7 days-->
+                <!--                                            <i class="material-icons">arrow_drop_down</i>-->
+                <!--                                        </button>-->
+                <!--                                        <div class="mdc-menu mdc-menu-surface" tabindex="-1">-->
+                <!--                                            <ul class="mdc-list" role="menu" aria-hidden="true"-->
+                <!--                                                aria-orientation="vertical">-->
+                <!--                                                <li class="mdc-list-item" role="menuitem">-->
+                <!--                                                    <h6 class="item-subject font-weight-normal">Back</h6>-->
+                <!--                                                </li>-->
+                <!--                                                <li class="mdc-list-item" role="menuitem">-->
+                <!--                                                    <h6 class="item-subject font-weight-normal">Forward</h6>-->
+                <!--                                                </li>-->
+                <!--                                                <li class="mdc-list-item" role="menuitem">-->
+                <!--                                                    <h6 class="item-subject font-weight-normal">Reload</h6>-->
+                <!--                                                </li>-->
+                <!--                                                <li class="mdc-list-divider"></li>-->
+                <!--                                                <li class="mdc-list-item" role="menuitem">-->
+                <!--                                                    <h6 class="item-subject font-weight-normal">Save As..</h6>-->
+                <!--                                                </li>-->
+                <!--                                            </ul>-->
+                <!--                                        </div>-->
+                <!--                                    </div>-->
+                <!--                                </div>-->
+                <!--                                <div class="mdc-layout-grid__inner mt-2">-->
+                <!--                                    <div-->
+                <!--                                        class="mdc-layout-grid__cell mdc-layout-grid__cell&#45;&#45;span-6 mdc-layout-grid__cell&#45;&#45;span-8-tablet">-->
+                <!--                                        <div class="table-responsive">-->
+                <!--                                            <table class="table dashboard-table">-->
+                <!--                                                <tbody>-->
+                <!--                                                <tr>-->
+                <!--                                                    <td>-->
+                <!--                                                        <span class="flag-icon-container"><i-->
+                <!--                                                            class="flag-icon flag-icon-us mr-2"></i></span>United States-->
+                <!--                                                    </td>-->
+                <!--                                                    <td>$1,671.10</td>-->
+                <!--                                                    <td class=" font-weight-medium"> 39%</td>-->
+                <!--                                                </tr>-->
+                <!--                                                <tr>-->
+                <!--                                                    <td><span class="flag-icon-container"><i-->
+                <!--                                                        class="flag-icon flag-icon-ph mr-2"></i></span>Philippines-->
+                <!--                                                    </td>-->
+                <!--                                                    <td>$1,064.75</td>-->
+                <!--                                                    <td class=" font-weight-medium"> 30%</td>-->
+                <!--                                                </tr>-->
+                <!--                                                <tr>-->
+                <!--                                                    <td><span class="flag-icon-container"><i-->
+                <!--                                                        class="flag-icon flag-icon-gb mr-2"></i></span>United Kingdom-->
+                <!--                                                    </td>-->
+                <!--                                                    <td>$1,055.98</td>-->
+                <!--                                                    <td class=" font-weight-medium"> 45%</td>-->
+                <!--                                                </tr>-->
+                <!--                                                <tr>-->
+                <!--                                                    <td><span class="flag-icon-container"><i-->
+                <!--                                                        class="flag-icon flag-icon-ca mr-2"></i></span>Canada-->
+                <!--                                                    </td>-->
+                <!--                                                    <td>$1,045.49</td>-->
+                <!--                                                    <td class=" font-weight-medium"> 80%</td>-->
+                <!--                                                </tr>-->
+                <!--                                                <tr>-->
+                <!--                                                    <td><span class="flag-icon-container"><i-->
+                <!--                                                        class="flag-icon flag-icon-fr mr-2"></i></span>France-->
+                <!--                                                    </td>-->
+                <!--                                                    <td>$2,050.93</td>-->
+                <!--                                                    <td class=" font-weight-medium"> 10%</td>-->
+                <!--                                                </tr>-->
+                <!--                                                </tbody>-->
+                <!--                                            </table>-->
+                <!--                                        </div>-->
+                <!--                                    </div>-->
+                <!--                                    <div-->
+                <!--                                        class="mdc-layout-grid__cell mdc-layout-grid__cell&#45;&#45;span-6 mdc-layout-grid__cell&#45;&#45;span-8-tablet">-->
+                <!--                                        <div id="revenue-map" class="revenue-world-map"></div>-->
+                <!--                                    </div>-->
+                <!--                                </div>-->
+                <!--                            </div>-->
+                <!--                        </div>-->
+
+                <!--                        <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell&#45;&#45;span-8">-->
+                <!--                            <div class="mdc-card">-->
+                <!--                                <div class="d-flex justify-content-between align-items-center">-->
+                <!--                                    <h4 class="card-title mb-2 mb-sm-0">Revenue by location</h4>-->
+                <!--                                    <div class="d-flex justtify-content-between align-items-center">-->
+                <!--                                        <p class="d-none d-sm-block text-muted tx-12 mb-0 mr-2">Goal reached</p>-->
+                <!--                                        <i class="material-icons options-icon">more_vert</i>-->
+                <!--                                    </div>-->
+                <!--                                </div>-->
+                <!--                                <div class="d-block d-sm-flex justify-content-between align-items-center">-->
+                <!--                                    <h6 class="card-sub-title mb-0">Sales performance revenue based by country</h6>-->
+                <!--                                    <div class="mdc-tab-wrapper revenue-tab mdc-tab&#45;&#45;secondary">-->
+                <!--                                        <div class="mdc-tab-bar" role="tablist">-->
+                <!--                                            <div class="mdc-tab-scroller">-->
+                <!--                                                <div class="mdc-tab-scroller__scroll-area">-->
+                <!--                                                    <div class="mdc-tab-scroller__scroll-content">-->
+                <!--                                                        <button class="mdc-tab mdc-tab&#45;&#45;active" role="tab"-->
+                <!--                                                                aria-selected="true" tabindex="0">-->
+                <!--                                <span class="mdc-tab__content">-->
+                <!--                                  <span class="mdc-tab__text-label">1W</span>-->
+                <!--                                </span>-->
+                <!--                                                            <span class="mdc-tab-indicator mdc-tab-indicator&#45;&#45;active">-->
+                <!--                                  <span class="mdc-tab-indicator__content mdc-tab-indicator__content&#45;&#45;underline"></span>-->
+                <!--                                </span>-->
+                <!--                                                            <span class="mdc-tab__ripple"></span>-->
+                <!--                                                        </button>-->
+                <!--                                                        <button class="mdc-tab mdc-tab" role="tab" aria-selected="true"-->
+                <!--                                                                tabindex="0">-->
+                <!--                                <span class="mdc-tab__content">-->
+                <!--                                  <span class="mdc-tab__text-label">1M</span>-->
+                <!--                                </span>-->
+                <!--                                                            <span class="mdc-tab-indicator mdc-tab-indicator">-->
+                <!--                                  <span class="mdc-tab-indicator__content mdc-tab-indicator__content&#45;&#45;underline"></span>-->
+                <!--                                </span>-->
+                <!--                                                            <span class="mdc-tab__ripple"></span>-->
+                <!--                                                        </button>-->
+                <!--                                                        <button class="mdc-tab mdc-tab" role="tab" aria-selected="true"-->
+                <!--                                                                tabindex="0">-->
+                <!--                                <span class="mdc-tab__content">-->
+                <!--                                  <span class="mdc-tab__text-label">3M</span>-->
+                <!--                                </span>-->
+                <!--                                                            <span class="mdc-tab-indicator mdc-tab-indicator">-->
+                <!--                                  <span class="mdc-tab-indicator__content mdc-tab-indicator__content&#45;&#45;underline"></span>-->
+                <!--                                </span>-->
+                <!--                                                            <span class="mdc-tab__ripple"></span>-->
+                <!--                                                        </button>-->
+                <!--                                                        <button class="mdc-tab mdc-tab" role="tab" aria-selected="true"-->
+                <!--                                                                tabindex="0">-->
+                <!--                                <span class="mdc-tab__content">-->
+                <!--                                  <span class="mdc-tab__text-label">1Y</span>-->
+                <!--                                </span>-->
+                <!--                                                            <span class="mdc-tab-indicator mdc-tab-indicator">-->
+                <!--                                  <span class="mdc-tab-indicator__content mdc-tab-indicator__content&#45;&#45;underline"></span>-->
+                <!--                                </span>-->
+                <!--                                                            <span class="mdc-tab__ripple"></span>-->
+                <!--                                                        </button>-->
+                <!--                                                        <button class="mdc-tab mdc-tab" role="tab" aria-selected="true"-->
+                <!--                                                                tabindex="0">-->
+                <!--                                <span class="mdc-tab__content">-->
+                <!--                                  <span class="mdc-tab__text-label">ALL</span>-->
+                <!--                                </span>-->
+                <!--                                                            <span class="mdc-tab-indicator mdc-tab-indicator">-->
+                <!--                                  <span class="mdc-tab-indicator__content mdc-tab-indicator__content&#45;&#45;underline"></span>-->
+                <!--                                </span>-->
+                <!--                                                            <span class="mdc-tab__ripple"></span>-->
+                <!--                                                        </button>-->
+                <!--                                                    </div>-->
+                <!--                                                </div>-->
+                <!--                                            </div>-->
+                <!--                                        </div>-->
+                <!--                                        <div class="content content&#45;&#45;active">-->
+                <!--                                        </div>-->
+                <!--                                        <div class="content">-->
+                <!--                                        </div>-->
+                <!--                                        <div class="content">-->
+                <!--                                        </div>-->
+                <!--                                        <div class="content">-->
+                <!--                                        </div>-->
+                <!--                                        <div class="content">-->
+                <!--                                        </div>-->
+                <!--                                    </div>-->
+                <!--                                </div>-->
+                <!--                                <div class="chart-container mt-4">-->
+                <!--                                    <canvas id="revenue-chart" height="260"></canvas>-->
+                <!--                                </div>-->
+                <!--                            </div>-->
+                <!--                        </div>-->
+                <!--                        <div-->
+                <!--                            class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell&#45;&#45;span-4 mdc-layout-grid__cell&#45;&#45;span-8-tablet">-->
+                <!--                            <div class="mdc-card">-->
+                <!--                                <div class="d-flex d-lg-block d-xl-flex justify-content-between">-->
+                <!--                                    <div>-->
+                <!--                                        <h4 class="card-title">Order Statistics</h4>-->
+                <!--                                        <h6 class="card-sub-title">Customers 58.39k</h6>-->
+                <!--                                    </div>-->
+                <!--                                    <div id="sales-legend" class="d-flex flex-wrap"></div>-->
+                <!--                                </div>-->
+                <!--                                <div class="chart-container mt-4">-->
+                <!--                                    <canvas id="chart-sales" height="260"></canvas>-->
+                <!--                                </div>-->
+                <!--                            </div>-->
+                <!--                        </div>-->
+            </div>
+        </div>
+        </main>
+        <!-- partial:partials/_footer.html -->
+        <!-- partial -->
+    </div>
+    </div>
+    </div>
+    <!-- plugins:js -->
+    <script src={{ url_for('static', path='vendors/js/vendor.bundle.base.js') }}></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page-->
+    <script src={{ url_for('static', path='vendors/chartjs/Chart.min.js') }}></script>
+    <script src={{ url_for('static', path='vendors/jvectormap/jquery-jvectormap.min.js') }}></script>
+    <script src={{ url_for('static', path='vendors/jvectormap/jquery-jvectormap-world-mill-en.js') }}></script>
+    <!-- End plugin js for this page-->
+    <!-- inject:js -->
+    <script src={{ url_for('static', path='js/material.js') }}></script>
+    <script src={{ url_for('static', path='js/misc.js') }}></script>
+    <!-- endinject -->
+    <!-- Custom js for this page-->
+    <script src={{ url_for('static', path='js/dashboard.js') }}></script>
+    <!-- End custom js for this page-->
+</body>
+{% if message%}
+	<script>
+		alert("{{message}}")
+	</script>
+{% endif %}
+</html>
