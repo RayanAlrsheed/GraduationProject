@@ -18,7 +18,6 @@ from API import router as api_router
 
 app = FastAPI()
 app.include_router(api_router)
-# CONNECTION_URL = CONNECTION_URL
 CONNECTION_URL = os.environ.get("CONNECTION_URL")
 
 connect(db='GraduationProject', host=CONNECTION_URL)
@@ -91,6 +90,9 @@ def is_admin(user_id):
 @app.get("/")
 def main_page(request: Request, authorize: AuthJWT = Depends()):
     authorize.jwt_required()
+
+
+
     return templates.TemplateResponse("index.html", {"request": request})
 
 
@@ -280,4 +282,4 @@ def settings(request: Request, authorize: AuthJWT = Depends(), error = None):
     elif error == "phone":
         load["message"] = "please enter your phone number correctly"
 
-    return templates.TemplateResponse("settings.html", load)
+    return templates.TemplateResponse("Settings.html", load)

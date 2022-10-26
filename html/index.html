@@ -303,70 +303,47 @@
         <!-- partial -->
         <div class="page-wrapper mdc-toolbar-fixed-adjust">
             <main class="content-wrapper">
-                <div class="mdc-layout-grid">
-                    <div class="mdc-layout-grid__inner">
-                        <div
-                            class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-3-desktop mdc-layout-grid__cell--span-4-tablet">
-                            <div class="mdc-card info-card info-card--success">
-                                <div class="card-inner">
-                                    <h5 class="card-title">Total Order</h5>
-                                    <h5 class="font-weight-light pb-2 mb-1 border-bottom">$62,0076.00</h5>
-                                    <p class="tx-12 text-muted">48% target reached</p>
-                                    <div class="card-icon-wrapper">
-                                        <i class="material-icons">dvr</i>
-                                    </div>
-                                </div>
-                            </div>
+                <div class="container">
+                    <div class="d-flex justify-content-between">
+                        <div class="w-50">
+                            <canvas id="month-chart"></canvas>
                         </div>
-                        <div
-                            class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-3-desktop mdc-layout-grid__cell--span-4-tablet">
-                            <div class="mdc-card info-card info-card--danger">
-                                <div class="card-inner">
-                                    <h5 class="card-title">Total Meal Order</h5>
-                                    <h5 class="font-weight-light pb-2 mb-1 border-bottom">$1,958,104.00</h5>
-                                    <p class="tx-12 text-muted">55% target reached</p>
-                                    <div class="card-icon-wrapper">
-                                        <i class="material-icons">attach_money</i>
-                                    </div>
-                                </div>
-                            </div>
+
+                        <div class="w-50">
+                            <canvas id="week-chart"></canvas>
                         </div>
                     </div>
                 </div>
-                <div
-                    class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet">
-                    <div class="mdc-card bg-success text-white">
-                        <div class="d-flex justify-content-between">
-                            <h3 class="font-weight-normal">Fresh food surplus</h3>
-                            <i class="material-icons options-icon text-white">more_vert</i>
-                        </div>
-                        <div class="mdc-layout-grid__inner align-items-center">
-                            <div
-                                class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-2-phone">
-                                <div>
-                                    <h5 class="font-weight-normal mt-2">Customers 58.39k</h5>
-                                    <h2 class="font-weight-normal mt-3 mb-0">636,757K</h2>
-                                </div>
-                            </div>
-                            <div
-                                class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-5-tablet mdc-layout-grid__cell--span-2-phone">
-                                <canvas id="impressions-chart" height="80"></canvas>
-                            </div>
+                <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12 mt-5">
+                    <div class="mdc-card p-0">
+                        <h6 class="card-title card-padding pb-0 w-50" sytle="padding-right: 0%">Recommendation</h6>
+                        <h6 class="text-right mr-3" style="font-weight:normal;">2022-10-22</h6>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-left w-50">Ingredient</th>
+                                        <th class="text-left w-50">Needed</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    <tr>
+                                        <td class="text-left">Meat</td>
+                                        <td class="text-left">16KG</td>
+                                    </tr>
+                                    
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
-                <div class="mt-5">
-                    <h2>Recommended fresh food for the next day</h2>
-                    <div>
-                        <div
-                            class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-3-desktop mdc-layout-grid__cell--span-4-tablet">
-                            <div class="mdc-card info-card info-card--success">
-                                <div class="card-inner">
-                                    <h5 class="card-title">15KG Meat</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="w-100 mt-3">
+                    Did you upload your sales? 
+                    <br>
+                    <button class="mdc-button mdc-button--raised justify-content-center mt-3" style="margin-left: auto;">
+                        Recommend
+                    </button>
                 </div>
             </main>
             <!-- partial:partials/_footer.html -->
@@ -390,5 +367,65 @@
 <script src={{ url_for('static', path='js/dashboard.js') }}></script>
 <!-- End custom js for this page-->
 </body>
+<script>
 
+
+    new Chart(document.getElementById("month-chart"), {
+        type: 'line',
+        data: {
+            labels: ["jan", "feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"],
+            datasets: [{
+                label: "Monthly Sales",
+                data: [592, 53, 314, 76, 99, 980, 43, 583, 90, 878, 644, 24], // Rayan pass data here
+                borderColor: "#3e95cd",
+                //fill: false
+            },
+            ]
+        },
+    });
+
+
+    new Chart(document.getElementById("week-chart"), {
+        type: 'line',
+        data: {
+            labels: ["10/07" , "10/08" , "10/09" , "10/10" , "10/11" , "10/12" , "10/13"],
+            datasets: [
+                {
+                    // Here is you pass mail name
+                    // example : Pasta , Burger ,
+                label: "Shawirma",
+                data: [4923, 4830, 48123, 76, 1482, 482, 43, 384, 482, 380, 644, 3190], // Rayan pass data here from DB
+                borderColor: "#932423", // you can define the color what you want
+                //fill: false // Rayan you can remove this if you want to fill the color
+            },
+
+                {
+                    label: "Burger",
+
+                    data: [456, 53, 3481, 9433, 99, 482, 999, 823, 482, 5820, 1380, 999], //  Rayan pass data here from DB
+                    borderColor: "#293244", // you can define the color what you want
+                    fill: false // Rayan you can remove this if you want to fill the color
+                },
+
+                {
+                    label: "Pizza",
+
+                    data: [482, 53, 123, 76, 934, 482, 43, 3893, 482, 4850, 644, 24], //  Rayan pass data here from DB
+                    borderColor: "#A474DC",
+                    fill: false // Rayan you can remove this if you want to fill the color
+                },
+
+                {
+                    label: "Pasta",
+
+                    data: [482, 53, 123, 76, 934, 482, 43, 3893, 482, 4850, 644, 24], //  Rayan pass data here from DB
+                    borderColor: "#573932",
+                    fill: false // Rayan you can remove this if you want to fill the color
+                },
+            ]
+        },
+
+    });
+
+</script>
 </html>
