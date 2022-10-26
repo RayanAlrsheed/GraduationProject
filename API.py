@@ -48,17 +48,17 @@ def register(first_name: str = Form(None),
     authorize: AuthJWT = Depends()):
 
     if not (first_name and last_name and email and password and password2 and phone and location):
-        return RedirectResponse("/register?error=empty", status_code=status.HTTP_302_FOUND)
+        return RedirectResponse("/register?error=empty", status_code=302)
 
     if password != password2:
-        return RedirectResponse("/register?error=match", status_code=status.HTTP_302_FOUND)
+        return RedirectResponse("/register?error=match", status_code=302)
 
     if models.User.objects(Q(email=email)):
-        return RedirectResponse("/register?error=email", status_code=status.HTTP_302_FOUND)
+        return RedirectResponse("/register?error=email", status_code=302)
     if not re.fullmatch("0?5\d{8}", phone):
-        return RedirectResponse("/register?error=phone", status_code=status.HTTP_302_FOUND)
+        return RedirectResponse("/register?error=phone", status_code=302)
     if not re.fullmatch("[A-Za-z0-9@#$%^&+=]{8,16}", password):
-        return RedirectResponse("/register?error=password", status_code=status.HTTP_302_FOUND)
+        return RedirectResponse("/register?error=password", status_code=302)
 
     user = models.User(first_name=first_name, last_name=last_name,email=email,
                        password=get_password_hash(password),
@@ -70,7 +70,7 @@ def register(first_name: str = Form(None),
     restaurant.save()
     access_token = authorize.create_access_token(subject=str(user.id))
 
-    response = RedirectResponse("/", status_code=status.HTTP_302_TEMPORARY_REDIRECT)
+    response = RedirectResponse("/", status_code=302)
     authorize.set_access_cookies(access_token, response=response)
     return response
 
@@ -83,15 +83,15 @@ def login(email: str = Form(None), password : str = Form(None), authorize: AuthJ
 
     user = models.User.objects(Q(email=email))
     if not user:
-        return RedirectResponse("../login?error=email", status_code=status.HTTP_302_FOUND)
+        return RedirectResponse("../login?error=email", status_code=302)
     user = user[0]
 
     if not verify_password(password, user.password):
-        return RedirectResponse("../login?error=password", status_code=status.HTTP_302_FOUND)
+        return RedirectResponse("../login?error=password", status_code=302)
 
     access_token = authorize.create_access_token(subject=str(user.id))
 
-    response = RedirectResponse("/", status_code=status.HTTP_302_FOUND)
+    response = RedirectResponse("/", status_code=302)
     authorize.set_access_cookies(access_token, response=response)
 
     return response
@@ -101,7 +101,7 @@ def login(email: str = Form(None), password : str = Form(None), authorize: AuthJ
 def logout(authorize: AuthJWT = Depends()):
     authorize.jwt_required()
 
-    response = RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
+    response = RedirectResponse("/login", status_code=302)
     authorize.unset_jwt_cookies(response)
 
     return response
@@ -118,7 +118,7 @@ def add_element(element_id: str = Form(None), name: str = Form(None), authorize:
     print(element_id, name)
     print(restaurant.add_element(element_id, name))
 
-    return RedirectResponse("../menu", status_code=status.HTTP_302_FOUND)
+    return RedirectResponse("../menu", status_code=302)
 
 
 @router.post("/edit_element")
@@ -129,11 +129,11 @@ def edit_element(element_id_before: str = Form(...) ,element_id: str = Form(...)
     restaurant = models.Restaurant.objects.get(user_id=user_id)
 
     if not (element_id or name):
-        return RedirectResponse("../menu", status_code=status.HTTP_302_FOUND)
+        return RedirectResponse("../menu", status_code=302)
 
     restaurant.modify_element(element_id_before, element_id, name)
 
-    return RedirectResponse(f"../menu/edit?element_id={element_id}", status_code=status.HTTP_302_FOUND)
+    return RedirectResponse(f"../menu/edit?element_id={element_id}", status_code=302)
 
 
 @router.post("/remove_element")
@@ -147,7 +147,7 @@ def remove_element(element_id: str = Form(...), authorize: AuthJWT = Depends()):
 
     restaurant.remove_element(element_id)
 
-    return RedirectResponse(f"../menu", status_code=status.HTTP_302_FOUND)
+    return RedirectResponse(f"../menu", status_code=302)
 
 @router.post("/add_ingredient")
 def add_ingredient(element_id: str = Form(...), name: str = Form(...), quantity= Form(...), unit: str = Form(...), authorize: AuthJWT = Depends()):
@@ -166,7 +166,7 @@ def add_ingredient(element_id: str = Form(...), name: str = Form(...), quantity=
 
     restaurant.add_ingredient(element_id, name, quantity, unit)
 
-    return RedirectResponse(f"../menu/edit?element_id={element_id}", status_code=status.HTTP_302_FOUND)
+    return RedirectResponse(f"../menu/edit?element_id={element_id}", status_code=302)
 
 
 @router.post("/edit_ingredient")
@@ -180,14 +180,14 @@ def edit_ingredient(element_id: str = Form(...), number: int = Form(...),
         try:
             quantity = float(quantity)
         except:
-            RedirectResponse(f"../edit_ingredient?element_id={element_id}&number={number}", status_code=status.HTTP_302_FOUND)
+            RedirectResponse(f"../edit_ingredient?element_id={element_id}&number={number}", status_code=302)
 
     if not (quantity and name and unit):
         return RedirectResponse("/menu")
 
     restaurant.modify_ingredient(element_id, number, name, quantity, unit)
 
-    return RedirectResponse(f"/menu/edit?element_id={element_id}", status_code=status.HTTP_302_FOUND)
+    return RedirectResponse(f"/menu/edit?element_id={element_id}", status_code=302)
 
 
 @router.post("/remove_ingredient")
@@ -201,7 +201,7 @@ def remove_ingredient(element_id: str = Form(...), number: int = Form(...), auth
 
     restaurant.remove_ingredient(element_id, number)
 
-    return RedirectResponse(f"../menu/edit?element_id={element_id}", status_code=status.HTTP_302_FOUND)
+    return RedirectResponse(f"../menu/edit?element_id={element_id}", status_code=302)
 
 
 
@@ -267,12 +267,12 @@ def add_sale(time: date = Form(None), element_id: str = Form(None), quantity= Fo
         try:
             quantity = float(quantity)
         except:
-            RedirectResponse(f"../sales?time={time}", status_code=status.HTTP_302_FOUND)
+            RedirectResponse(f"../sales?time={time}", status_code=302)
 
     orders = models.Orders.objects.get(user_id=user_id)
     orders.add_sale_to_order(time, element_id, quantity)
 
-    return RedirectResponse(f"../sales?time={time}", status_code=status.HTTP_302_FOUND)
+    return RedirectResponse(f"../sales?time={time}", status_code=302)
 
 @router.post("/edit_sale")
 def edit_sale(time: date = Form(None), element_id: str = Form(None), quantity = Form(None), authorize: AuthJWT = Depends()):
@@ -282,14 +282,14 @@ def edit_sale(time: date = Form(None), element_id: str = Form(None), quantity = 
         try:
             quantity = float(quantity)
         except:
-            RedirectResponse(f"../edit_sale?time={time}&element_id={element_id}", status_code=status.HTTP_302_FOUND)
+            RedirectResponse(f"../edit_sale?time={time}&element_id={element_id}", status_code=302)
 
     user_id = ObjectId(authorize.get_jwt_subject())
     orders = models.Orders.objects.get(user_id=user_id)
     order = orders.get_order(time)
     order.modify_sale(element_id, quantity)
 
-    return RedirectResponse(f"../sales?time={time}", status_code=status.HTTP_302_FOUND)
+    return RedirectResponse(f"../sales?time={time}", status_code=302)
 
 @router.post("/remove_sale")
 def remove_sale(time: date = Form(None), element_id: str = Form(None), authorize: AuthJWT = Depends()):
@@ -298,7 +298,7 @@ def remove_sale(time: date = Form(None), element_id: str = Form(None), authorize
     orders = models.Orders.objects.get(user_id=user_id)
     orders.remove_sale_from_order(time, element_id)
 
-    return RedirectResponse(f"../sales?time={time}", status_code=status.HTTP_302_FOUND)
+    return RedirectResponse(f"../sales?time={time}", status_code=302)
 
 @router.post("/update_settings")
 def update_settings(first_name: str = Form(None),
@@ -319,22 +319,22 @@ def update_settings(first_name: str = Form(None),
         restaurant = models.Restaurant.objects.get(user_id=ObjectId(user_id))
     except Exception as e:
         print(e)
-        return RedirectResponse("../", status_code=status.HTTP_302_FOUND)
+        return RedirectResponse("../", status_code=302)
 
     if not (first_name and last_name and email and phone and location and phone and (not ((password and not password2) or (not password and password2)))):
-        return RedirectResponse("../settings?error=empty", status_code=status.HTTP_302_FOUND)
+        return RedirectResponse("../settings?error=empty", status_code=302)
 
     if password and password2 and password != password2:
-        return RedirectResponse("../settings?error=match", status_code=status.HTTP_302_FOUND)
+        return RedirectResponse("../settings?error=match", status_code=302)
 
     if email != user.email and models.User.objects(Q(email=email)):
-        return RedirectResponse("/settings?error=email", status_code=status.HTTP_302_FOUND)
+        return RedirectResponse("/settings?error=email", status_code=302)
 
     if not re.fullmatch("0?5\d{8}", phone):
-        return RedirectResponse("/settings?error=phone", status_code=status.HTTP_302_FOUND)
+        return RedirectResponse("/settings?error=phone", status_code=302)
 
     if password and not re.fullmatch("[A-Za-z0-9@#$%^&+=]{8,16}", password):
-        return RedirectResponse("/settings?error=password", status_code=status.HTTP_302_FOUND)
+        return RedirectResponse("/settings?error=password", status_code=302)
 
     user.first_name = first_name
     user.last_name = last_name
@@ -346,7 +346,7 @@ def update_settings(first_name: str = Form(None),
     user.save()
     restaurant.save()
 
-    return RedirectResponse("../settings", status_code=status.HTTP_302_FOUND)
+    return RedirectResponse("../settings", status_code=302)
 
 def extract_sales(file):
     pass
@@ -372,6 +372,6 @@ def upload_file(file: UploadFile = File(),  authorize: AuthJWT = Depends()):
         orders.save()
     except Exception as e:
         print(e)
-        return RedirectResponse("/upload?error=file", status_code=status.HTTP_302_FOUND)
+        return RedirectResponse("/upload?error=file", status_code=302)
 
-    return RedirectResponse("/upload", status_code=status.HTTP_302_FOUND)
+    return RedirectResponse("/upload", status_code=302)
