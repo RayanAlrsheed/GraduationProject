@@ -83,37 +83,98 @@ def logout(authorize: AuthJWT = Depends()):
 
     return RedirectResponse("/login")
 
-
-def is_admin(user_id):
-    return models.User.objects.get(id=user_id).type.lower() == "admin"
-
 @app.get("/")
 def main_page(request: Request, authorize: AuthJWT = Depends()):
     authorize.jwt_required()
 
+    user = models.User.objects.get(id=authorize.get_jwt_subject())
+    first_name = user.first_name
+    last_name = user.last_name
 
 
-    return templates.TemplateResponse("index.html", {"request": request})
+    orders = models.Orders.objects.get(user_id=ObjectId(authorize.get_jwt_subject()))
+    if not user.is_admin():
+        monthly_labels, monthly_sales = orders.get_monthly_sales()
 
+        weekly_labels, weekly_sales = orders.get_most_sales_in_week()
+
+        return templates.TemplateResponse("index.html", {"request": request,
+                                                         "first_name": first_name,
+                                                         "last_name": last_name,
+                                                         "monthly_labels": monthly_labels,
+                                                         "monthly_sales": monthly_sales,
+                                                         "weekly_labels": weekly_labels,
+                                                         "weekly_sales": weekly_sales
+                                                         })
+
+    charity_list = models.Charity.objects.all()
+    charity_list = from_document_to_dict(charity_list)
+    for charity in charity_list:
+        charity["_id"] = charity["_id"]["$oid"]
+
+    return templates.TemplateResponse("charity_admin.html", {"request": request,
+                                                         "first_name": first_name,
+                                                         "last_name": last_name,
+                                                        "charities": charity_list})
+
+
+@app.get("/add_charity")
+def add_charity(request: Request, authorize: AuthJWT = Depends()):
+    authorize.jwt_required()
+    user = models.User.objects.get(id=authorize.get_jwt_subject())
+    if not user.is_admin():
+        return RedirectResponse("/", status_code=302)
+
+    return templates.TemplateResponse("add_charity_admin.html", {"request":request, "first_name":user.first_name, "last_name":user.last_name})
+
+
+@app.get("/edit_charity")
+def edit_charity(request: Request, id=None, authorize: AuthJWT = Depends()):
+    authorize.jwt_required()
+    user = models.User.objects.get(id=authorize.get_jwt_subject())
+    if not user.is_admin():
+        return RedirectResponse("/", status_code=302)
+
+    try:
+        charity = models.Charity.objects.get(id=ObjectId(id))
+    except:
+        return RedirectResponse("/", status_code=302)
+
+    charity = from_document_to_dict(charity)
+    charity["id"] = charity["_id"]["$oid"]
+
+    load = {"request":request, "first_name":user.first_name, "last_name":user.last_name, "charity":charity, "edit":True}
+    return templates.TemplateResponse("add_charity_admin.html", load)
 
 @app.get("/charity")
 def charities(request: Request, authorize: AuthJWT = Depends()):
     authorize.jwt_required()
-    user_id = ObjectId(authorize.get_jwt_subject())
-    try:
-        restaurant_location = models.Restaurant.objects.get(user_id=user_id).location
-    except:
-        return RedirectResponse("/")
+    user = models.User.objects.get(id=authorize.get_jwt_subject())
+    first_name = user.first_name
+    last_name = user.last_name
+    if not user.is_admin():
+        user_id = ObjectId(authorize.get_jwt_subject())
+        try:
+            restaurant_location = models.Restaurant.objects.get(user_id=user_id).location
+        except:
+            return RedirectResponse("/")
 
 
-    near_charities = models.Charity.objects(location=restaurant_location)
-    charity_list = from_document_to_dict(near_charities)
-    return templates.TemplateResponse("Charity.html", {"request":request, "charities": charity_list})
+
+
+        near_charities = models.Charity.objects(location=restaurant_location)
+        charity_list = from_document_to_dict(near_charities)
+        return templates.TemplateResponse("Charity.html", {"request":request, "charities": charity_list, "first_name": first_name, "last_name": last_name})
 
 
 @app.get("/menu")
 def menu(request:Request, authorize: AuthJWT = Depends()):
     authorize.jwt_required()
+
+    user = models.User.objects.get(id=authorize.get_jwt_subject())
+    first_name = user.first_name
+    last_name = user.last_name
+
     user_id = authorize.get_jwt_subject()
     try:
         menu_as_documents = models.Restaurant.objects.get(user_id=user_id).menu
@@ -123,19 +184,27 @@ def menu(request:Request, authorize: AuthJWT = Depends()):
     menu_list = []
     for i, element in enumerate(menu_as_documents):
         menu_list.append(from_document_to_dict(element))
-    return templates.TemplateResponse("Menu.html", {"request":request, "elements": menu_list})
+    return templates.TemplateResponse("Menu.html", {"request":request, "elements": menu_list, "first_name": first_name, "last_name": last_name})
 
 @app.get("/menu/add")
 def add_element(request:Request, authorize: AuthJWT = Depends()):
     authorize.jwt_required()
-    user_id = ObjectId(authorize.get_jwt_subject())
 
-    return templates.TemplateResponse("add_menu.html", {"request":request})
+    user = models.User.objects.get(id=authorize.get_jwt_subject())
+    first_name = user.first_name
+    last_name = user.last_name
+
+    return templates.TemplateResponse("add_menu.html", {"request":request, "first_name": first_name, "last_name": last_name})
 
 
 @app.get("/menu/edit")
 def edit_element(request:Request, authorize: AuthJWT = Depends(), element_id=None):
     authorize.jwt_required()
+
+    user = models.User.objects.get(id=authorize.get_jwt_subject())
+    first_name = user.first_name
+    last_name = user.last_name
+
     user_id = ObjectId(authorize.get_jwt_subject())
     if not element_id:
         return RedirectResponse("/menu")
@@ -148,12 +217,17 @@ def edit_element(request:Request, authorize: AuthJWT = Depends(), element_id=Non
     element = from_document_to_dict(restaurant.get_element(element_id))
     for i, ingredient in enumerate(element["ingredients"]):
         ingredient['number'] = i
-    return templates.TemplateResponse("edit_menu.html", {"request":request, "element": element})
+    return templates.TemplateResponse("edit_menu.html", {"request":request, "element": element, "first_name": first_name, "last_name": last_name})
 
 
 @app.get("/edit_ingredient")
 def edit_ingredient(request:Request, authorize: AuthJWT = Depends(), element_id=None, number:int=None):
     authorize.jwt_required()
+
+    user = models.User.objects.get(id=authorize.get_jwt_subject())
+    first_name = user.first_name
+    last_name = user.last_name
+
     user_id = ObjectId(authorize.get_jwt_subject())
     if not element_id:
         return RedirectResponse("/menu")
@@ -164,14 +238,20 @@ def edit_ingredient(request:Request, authorize: AuthJWT = Depends(), element_id=
 
     ingredient = from_document_to_dict(restaurant.get_element(element_id))["ingredients"][number]
 
-    return templates.TemplateResponse("edit_ingredient.html", {"request":request, "ingredient": ingredient, "element_id": element_id, "number":number})
+    return templates.TemplateResponse("edit_ingredient.html", {"request":request, "ingredient": ingredient, "element_id": element_id, "number":number,
+                                                               "first_name": first_name, "last_name": last_name})
 
 
 @app.get("/sales")
 def sales(request:Request, authorize: AuthJWT = Depends(), time: date=None):
     authorize.jwt_required()
+
+    user = models.User.objects.get(id=authorize.get_jwt_subject())
+    first_name = user.first_name
+    last_name = user.last_name
+
     user_id = ObjectId(authorize.get_jwt_subject())
-    load = {"request":request}
+    load = {"request":request,  "first_name": first_name, "last_name": last_name}
     if time:
         try:
             load["time"] = time
@@ -215,9 +295,13 @@ def sales(request:Request, authorize: AuthJWT = Depends(), time: date=None):
 
 @app.get("/edit_sale")
 def edit_sale(request:Request, authorize: AuthJWT = Depends(), time: date=None, element_id=None):
-
     authorize.jwt_required()
-    user_id= ObjectId(authorize.get_jwt_subject())
+
+    user = models.User.objects.get(id=authorize.get_jwt_subject())
+    first_name = user.first_name
+    last_name = user.last_name
+
+    user_id = ObjectId(authorize.get_jwt_subject())
 
     if not (time and element_id):
         return RedirectResponse(f"sales?time={time}")
@@ -234,7 +318,9 @@ def edit_sale(request:Request, authorize: AuthJWT = Depends(), time: date=None, 
     if not sale:
         return RedirectResponse(f"sales?time={time}")
 
-    load = {"request":request, "element_id": element_id, "quantity": sale.quantity, "time": time}
+    load = {"request":request, "element_id": element_id, "quantity": sale.quantity, "time": time,
+            "first_name": first_name, "last_name": last_name
+            }
 
     return templates.TemplateResponse("edit_sale.html", load)
 
@@ -242,7 +328,12 @@ def edit_sale(request:Request, authorize: AuthJWT = Depends(), time: date=None, 
 @app.get("/upload")
 def upload(request:Request, authorize: AuthJWT = Depends(), error=None):
     authorize.jwt_required()
-    load = {"request": request}
+
+    user = models.User.objects.get(id=authorize.get_jwt_subject())
+    first_name = user.first_name
+    last_name = user.last_name
+
+    load = {"request": request, "first_name": first_name, "last_name": last_name}
     if error:
         load["message"] = "Make sure that the columns are in order\\nid, quantity, date\\n and the file is saved in csv utf-8 format"
     return templates.TemplateResponse("upload.html", load)

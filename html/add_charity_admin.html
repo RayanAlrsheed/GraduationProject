@@ -26,11 +26,11 @@
         <!-- partial:partials/_sidebar.html -->
         <aside class="mdc-drawer mdc-drawer--dismissible mdc-drawer--open">
             <div class="mdc-drawer__header">
-                <a href="Menu.html" class="brand-logo">
+                <a href="/" class="brand-logo">
                     <!--       replace logo
- Abdulrahman put logo here in "SRC" tag of image
- -->
-                    <!--                <img src={{ url_for('static', path='images/logo.svg') }} alt="logo">-->
+     Abdulrahman put logo here in "SRC" tag of image
+     -->
+                    <img src={{ url_for('static', path='images/logo.jpeg') }} style="width: 60px;" alt="logo">
                 </a>
             </div>
             <div class="mdc-drawer__content">
@@ -39,43 +39,19 @@
                 </div>
                 <div class="mdc-list-group">
                     <nav class="mdc-list mdc-drawer-menu">
+
+
                         <div class="mdc-list-item mdc-drawer-item">
-                            <a class="mdc-drawer-link" href="index.html">
-                                <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon"
-                                    aria-hidden="true">home</i>
-                                Dashboard
-                            </a>
-                        </div>
-                        <div class="mdc-list-item mdc-drawer-item">
-                            <a class="mdc-drawer-link" href="Menu.html">
-                                <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon"
-                                    aria-hidden="true">track_changes</i>
-                                Menu
-                            </a>
-                        </div>
-                        <div class="mdc-list-item mdc-drawer-item">
-                            <a class="mdc-drawer-link" href="Charity.html">
+                            <a class="mdc-drawer-link active" href="/">
                                 <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon"
                                     aria-hidden="true">grid_on</i>
                                 Charity
                             </a>
                         </div>
+
+
                         <div class="mdc-list-item mdc-drawer-item">
-                            <a class="mdc-drawer-link" href="UploadData.html">
-                                <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon"
-                                    aria-hidden="true">grid_on</i>
-                                Upload Data
-                            </a>
-                        </div>
-                        <div class="mdc-list-item mdc-drawer-item">
-                            <a class="mdc-drawer-link" href="Settings.html">
-                                <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon"
-                                    aria-hidden="true">pie_chart_outlined</i>
-                                Settings
-                            </a>
-                        </div>
-                        <div class="mdc-list-item mdc-drawer-item">
-                            <a class="mdc-drawer-link" href="Signout.html">
+                            <a class="mdc-drawer-link" href="/logout">
                                 <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon"
                                     aria-hidden="true">pie_chart_outlined</i>
                                 Sign out
@@ -94,7 +70,7 @@
                         <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button sidebar-toggler">
                             menu
                         </button>
-                        <span class="mdc-top-app-bar__title">Greetings Ahmad!</span>
+                        <span class="mdc-top-app-bar__title">Greetings {{first_name}}!</span>
                         <!--                    <div-->
                         <!--                        class="mdc-text-field mdc-text-field&#45;&#45;outlined mdc-text-field&#45;&#45;with-leading-icon search-text-field d-none d-md-flex">-->
                         <!--                        <i class="material-icons mdc-text-field__icon">search</i>-->
@@ -116,7 +92,7 @@
                                     <span class="figure">
                                         <!--                    <img src={{ url_for('static', path='images/faces/face1.jpg') }} alt="user" class="user">-->
                                     </span>
-                                    <span class="user-name">Ahmed Alrashed</span>
+                                    <span class="user-name">{{first_name}} {{last_name}}</span>
                                 </span>
                             </button>
                             <!--                        <div class="mdc-menu mdc-menu-surface" tabindex="-1">-->
@@ -149,47 +125,117 @@
 
             <main role="main">
                 <div class="container">
-                    <div class="page-wrapper mdc-toolbar-fixed-adjust">
-                        <main class="content-wrapper">
-                            <div class="mdc-layout-grid">
-                                <div class="mdc-layout-grid__inner">
-                                    <a class="btn btn-primary" href="add_menu.html" role="button">Add New Menu</a>
-                                    <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
-                                        <div class="mdc-card p-0">
-                                            <h6 class="card-title card-padding pb-0">Basic Table</h6>
-                                            <div class="table-responsive">
-                                                <table class="table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th class="text-left">Menu</th>
-                                                            <th>quantity</th>
-                                                            <th>edit action</th>
-                                                            <th>delete action</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td class="text-left">Dessert</td>
-                                                            <td>150</td>
-                                                            <td>
-                                                                <a href="add_menu.html">
-                                                                    edit
-                                                                </a>
-                                                            </td>
-                                                            <td>
-                                                                <a href="#">
-                                                                    delete
-                                                                </a>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
+                    <div class="mdc-layout-grid">
+                        <div class="mdc-layout-grid__inner">
+                            <div class="mdc-layout-grid__cell--span-12">
+                                <div class="mdc-card">
+                                    {% if edit is defined %}
+                                    <h6 class="card-title">Edit Charity</h6>
+                                    {% else %}
+                                    <h6 class="card-title">Add Charity</h6>
+                                    {% endif %}
+                                    {% if edit is defined %}
+                                    <form action="/api/edit_charity" method="POST">
+                                    <div class="template-demo">
+                                        <div class="mdc-layout-grid__inner">
+                                                <input type="hidden" name="id" value="{{charity.id}}">
+                                            <div
+                                            class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop">
+                                            <div class="mdc-text-field">
+                                                <input class="mdc-text-field__input" id="text-field-hero-input" name="name" value="{{charity.name}}">
+                                                <div class="mdc-line-ripple"></div>
+                                                <label for="text-field-hero-input"
+                                                    class="mdc-floating-label">Name</label>
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop">
+                                            <div class="mdc-text-field">
+                                                <input class="mdc-text-field__input" id="text-field-hero-input" name="phone" value="{{charity.phone}}">
+                                                <div class="mdc-line-ripple"></div>
+                                                <label for="text-field-hero-input"
+                                                    class="mdc-floating-label">Phone</label>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop">
+                                            <div class="mdc-text-field">
+                                                <input class="mdc-text-field__input" id="text-field-hero-input" name="location" value="{{charity.location}}">
+                                                <div class="mdc-line-ripple"></div>
+                                                <label for="text-field-hero-input"
+                                                    class="mdc-floating-label">Location</label>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop">
+                                            <div class="mdc-text-field">
+                                                <input class="mdc-text-field__input" id="text-field-hero-input" name="url" value="{{charity.location_url}}">
+                                                <div class="mdc-line-ripple"></div>
+                                                <label for="text-field-hero-input"
+                                                    class="mdc-floating-label">Location URL</label>
                                             </div>
                                         </div>
                                     </div>
+                                    <button class="mdc-button mdc-button--raised w-100">
+                                        Update
+                                    </button>
                                 </div>
                             </div>
-                        </main>
+                                </form>
+
+                                            {% else %}
+
+                                            <form action="/api/add_charity" method="post">
+                                            <div class="template-demo">
+                                            <div class="mdc-layout-grid__inner">
+                                            <div
+                                                class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop">
+                                                <div class="mdc-text-field">
+                                                    <input class="mdc-text-field__input" id="text-field-hero-input" name="name">
+                                                    <div class="mdc-line-ripple"></div>
+                                                    <label for="text-field-hero-input"
+                                                        class="mdc-floating-label">Name</label>
+                                                </div>
+                                            </div>
+
+                                            <div
+                                                class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop">
+                                                <div class="mdc-text-field">
+                                                    <input class="mdc-text-field__input" id="text-field-hero-input" name="phone">
+                                                    <div class="mdc-line-ripple"></div>
+                                                    <label for="text-field-hero-input"
+                                                        class="mdc-floating-label">Phone</label>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop">
+                                                <div class="mdc-text-field">
+                                                    <input class="mdc-text-field__input" id="text-field-hero-input" name="location">
+                                                    <div class="mdc-line-ripple"></div>
+                                                    <label for="text-field-hero-input"
+                                                        class="mdc-floating-label">Location</label>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop">
+                                                <div class="mdc-text-field">
+                                                    <input class="mdc-text-field__input" id="text-field-hero-input" name="url">
+                                                    <div class="mdc-line-ripple"></div>
+                                                    <label for="text-field-hero-input"
+                                                        class="mdc-floating-label">Location URL</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button class="mdc-button mdc-button--raised w-100">
+                                            Add 
+                                        </button>
+                                    </div>
+                                </div>
+                                    </form>
+                                    {% endif %}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </main>

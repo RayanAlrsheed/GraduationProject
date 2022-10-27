@@ -30,7 +30,7 @@
                 <!--       replace logo
  Abdulrahman put logo here in "SRC" tag of image
  -->
-                <!--                <img src={{ url_for('static', path='images/logo.svg') }} alt="logo">-->
+                <img src={{ url_for('static', path='images/logo.jpeg') }} style="width: 60px;" alt="logo">
             </a>
         </div>
         <div class="mdc-drawer__content">
@@ -101,7 +101,7 @@
                     <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button sidebar-toggler">
                         menu
                     </button>
-                    <span class="mdc-top-app-bar__title">Greetings Ahmad!</span>
+                    <span class="mdc-top-app-bar__title">Greetings {{first_name}}!</span>
                     <!--                    <div-->
                     <!--                        class="mdc-text-field mdc-text-field&#45;&#45;outlined mdc-text-field&#45;&#45;with-leading-icon search-text-field d-none d-md-flex">-->
                     <!--                        <i class="material-icons mdc-text-field__icon">search</i>-->
@@ -123,7 +123,7 @@
                                     <span class="figure">
                                         <!--                    <img src={{ url_for('static', path='images/faces/face1.jpg') }} alt="user" class="user">-->
                                     </span>
-                                    <span class="user-name">Ahmed Alrashed</span>
+                                    <span class="user-name">{{first_name}} {{last_name}}</span>
                                 </span>
                         </button>
                         <!--                        <div class="mdc-menu mdc-menu-surface" tabindex="-1">-->
@@ -369,14 +369,13 @@
 </body>
 <script>
 
-
     new Chart(document.getElementById("month-chart"), {
         type: 'line',
         data: {
-            labels: ["jan", "feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"],
+            labels: {{monthly_labels|tojson}},
             datasets: [{
                 label: "Monthly Sales",
-                data: [592, 53, 314, 76, 99, 980, 43, 583, 90, 878, 644, 24], // Rayan pass data here
+                data: {{monthly_sales}}, // Rayan pass data here
                 borderColor: "#3e95cd",
                 //fill: false
             },
@@ -384,44 +383,26 @@
         },
     });
 
-
+    let colors = ["#932423", "#293244", "#A474DC", "#573932", "#3e95cd"]
+    let x = 0
     new Chart(document.getElementById("week-chart"), {
         type: 'line',
         data: {
-            labels: ["10/07" , "10/08" , "10/09" , "10/10" , "10/11" , "10/12" , "10/13"],
+            labels: {{weekly_labels|tojson}},
             datasets: [
+                {% for element in weekly_sales %}
                 {
                     // Here is you pass mail name
                     // example : Pasta , Burger ,
-                label: "Shawirma",
-                data: [4923, 4830, 48123, 76, 1482, 482, 43, 384, 482, 380, 644, 3190], // Rayan pass data here from DB
-                borderColor: "#932423", // you can define the color what you want
-                //fill: false // Rayan you can remove this if you want to fill the color
+                label: "{{element.element_id}}",
+                data: {{element.sales}}, // Rayan pass data here from DB
+                borderColor: colors[x++], // you can define the color what you want
+                fill: false // Rayan you can remove this if you want to fill the color
             },
+            {% endfor %}
 
-                {
-                    label: "Burger",
-
-                    data: [456, 53, 3481, 9433, 99, 482, 999, 823, 482, 5820, 1380, 999], //  Rayan pass data here from DB
-                    borderColor: "#293244", // you can define the color what you want
-                    fill: false // Rayan you can remove this if you want to fill the color
-                },
-
-                {
-                    label: "Pizza",
-
-                    data: [482, 53, 123, 76, 934, 482, 43, 3893, 482, 4850, 644, 24], //  Rayan pass data here from DB
-                    borderColor: "#A474DC",
-                    fill: false // Rayan you can remove this if you want to fill the color
-                },
-
-                {
-                    label: "Pasta",
-
-                    data: [482, 53, 123, 76, 934, 482, 43, 3893, 482, 4850, 644, 24], //  Rayan pass data here from DB
-                    borderColor: "#573932",
-                    fill: false // Rayan you can remove this if you want to fill the color
-                },
+                
+                
             ]
         },
 

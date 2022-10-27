@@ -66,8 +66,11 @@ def register(first_name: str = Form(None),
     user.save()
 
     restaurant = models.Restaurant(user_id=user.id, location=location, menu=[])
-
     restaurant.save()
+
+    orders = models.Orders(user_id=user.id)
+    orders.save()
+
     access_token = authorize.create_access_token(subject=str(user.id))
 
     response = RedirectResponse("/", status_code=302)
@@ -210,54 +213,64 @@ def add_charity(name: str = Form(...), phone: str = Form(...), location: str = F
                 url: str = Form(...), authorize: AuthJWT = Depends()):
     authorize.jwt_required()
     user_id = ObjectId(authorize.get_jwt_subject())
-    user = models.User.objects.get(_id=user_id)
+    user = models.User.objects.get(id=user_id)
     if not user.is_admin():
-        return RedirectResponse("../charity")
+        return RedirectResponse("/", status_code=302)
 
     if not (name or phone or location or url):
-        return RedirectResponse("../")
+        return RedirectResponse("/", status_code=302)
 
     charity = models.Charity(name=name, phone=phone, location=location, location_url=url)
 
     charity.save()
 
+    return RedirectResponse("/", status_code=302)
 
-@router.post("edit_charity")
+
+@router.post("/edit_charity")
 def edit_charity(id:str = Form(...), name: str = Form(...), phone: str = Form(...), location: str = Form(...),
                 url: str = Form(...), authorize: AuthJWT = Depends()):
     authorize.jwt_required()
     user_id = ObjectId(authorize.get_jwt_subject())
-    user = models.User.objects.get(_id=user_id)
+    user = models.User.objects.get(id=user_id)
     if not user.is_admin():
         return RedirectResponse("../charity")
 
     if not (name and phone and location and url and id):
-        return RedirectResponse("..//")
+        return RedirectResponse("/")
+    try:
+        charity = models.Charity.objects.get(id=ObjectId(id))
 
-    charity = models.Charity.objects(_id=ObjectId(id))[0]
+        charity.name = name
+        charity.phone = phone
+        charity.location = location
+        charity.location_url = url
+        charity.save()
+    except:
+        pass
 
-    charity.name = name
-    charity.phone = phone
-    charity.location = location
-    charity.location_url = url
-
-    charity.save()
+    return RedirectResponse("/", status_code=302)
 
 
-@router.post("remove_charity")
+@router.post("/remove_charity")
 def remove_charity(id:str = Form(...), authorize: AuthJWT = Depends()):
     authorize.jwt_required()
     user_id = ObjectId(authorize.get_jwt_subject())
-    user = models.User.objects.get(_id=user_id)
+    user = models.User.objects.get(id=user_id)
     if not user.is_admin():
         return RedirectResponse("../charity")
 
     if not id:
         return RedirectResponse("../")
 
-    charity = models.Charity.objects(_id=ObjectId(id))
+    try:
+        charity = models.Charity.objects(id=ObjectId(id))
 
-    charity.delete()
+        charity.delete()
+    except:
+        pass
+
+    return RedirectResponse("/", status_code=302)
 
 @router.post("/add_sale")
 def add_sale(time: date = Form(None), element_id: str = Form(None), quantity= Form(None), authorize: AuthJWT = Depends()):

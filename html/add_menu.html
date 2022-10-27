@@ -32,7 +32,7 @@
                     <!--       replace logo
  Abdulrahman put logo here in "SRC" tag of image
  -->
-                    <!--                <img src={{ url_for('static', path='images/logo.svg') }} alt="logo">-->
+                    <img src={{ url_for('static', path='images/logo.jpeg') }} style="width: 60px;" alt="logo">
                 </a>
             </div>
             <div class="mdc-drawer__content">
@@ -103,7 +103,7 @@
                         <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button sidebar-toggler">
                             menu
                         </button>
-                        <span class="mdc-top-app-bar__title">Greetings Ahmad!</span>
+                        <span class="mdc-top-app-bar__title">Greetings {{first_name}}!</span>
                         <!--                    <div-->
                         <!--                        class="mdc-text-field mdc-text-field&#45;&#45;outlined mdc-text-field&#45;&#45;with-leading-icon search-text-field d-none d-md-flex">-->
                         <!--                        <i class="material-icons mdc-text-field__icon">search</i>-->
@@ -125,7 +125,7 @@
                                     <span class="figure">
                                         <!--                    <img src={{ url_for('static', path='images/faces/face1.jpg') }} alt="user" class="user">-->
                                     </span>
-                                    <span class="user-name">Ahmed Alrashed</span>
+                                    <span class="user-name">{{first_name}} {{last_name}}</span>
                                 </span>
                             </button>
                             <!--                        <div class="mdc-menu mdc-menu-surface" tabindex="-1">-->

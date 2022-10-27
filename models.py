@@ -1,6 +1,6 @@
-from datetime import date, datetime
+from datetime import date, timedelta
 
-from mongoengine import Document, StringField, IntField, ListField, FloatField, DateField, DateTimeField,EmbeddedDocumentField, EmbeddedDocument, ObjectIdField
+from mongoengine import Document, StringField, ListField, FloatField, DateField, DateTimeField,EmbeddedDocumentField, EmbeddedDocument, ObjectIdField
 
 
 class User(Document):
@@ -85,7 +85,6 @@ class Restaurant(Document):
     def modify_element(self, element_id_before,element_id, name=None):
 
         for element in self.menu:
-            print(element.element_id, element_id_before)
             if element.element_id == element_id_before:
                 if name:
                     element.element_id = element_id
@@ -156,11 +155,9 @@ class Order(EmbeddedDocument):
     def modify_sale(self, element_id, quantity=None):
 
         for sale in self.sales:
-            print(sale.element_id, element_id)
             if sale.element_id == element_id:
                 if quantity:
                     sale.quantity = quantity
-                self._instance.save()
                 return True
         return False
 
@@ -270,6 +267,58 @@ class Orders(Document):
             if order.date == time:
                 return order
         return None
+
+    def _is_added_to_sales(self, element_id, sales):
+        for sale in sales:
+            if sale["element_id"] == element_id:
+                return True
+
+        return False
+
+    def get_most_sales_in_week(self):
+        time = date.today()
+        sales = []
+        for order in self.orders:
+            if time >= order.date >= time - timedelta(days=6):
+                day = (time - order.date).days
+                for sale in order.sales:
+                    if not self._is_added_to_sales(sale.element_id, sales):
+                        sales.append({"element_id": sale.element_id, "sales": [0, 0, 0, 0, 0, 0, 0], "total": 0})
+
+                    for added_sales in sales:
+                        if added_sales["element_id"] == sale.element_id:
+                            added_sales["sales"][day] = sale.quantity
+                            added_sales["total"] += sale.quantity
+                            break
+
+        sales.sort(key= lambda sale: sale["total"], reverse=True)
+        labels = [(time - timedelta(days=i)).strftime("%m/%d") for i in range(6, -1, -1)]
+        return labels, sales[:5]
+
+
+    def get_monthly_sales(self):
+        months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+        # offset
+        current_month = date.today().month
+
+        labels = []
+        sales = [0 for _ in range(12)]
+        for i in range(12):
+            labels.append(months[(current_month + i - 1) % 12])
+        labels.reverse()
+        starting_date = date(year=date.today().year - 1, month= current_month, day=28)
+
+        while (starting_date + timedelta(days=1)).month == current_month:
+            starting_date = starting_date + timedelta(days=1)
+
+        for order in self.orders:
+            if order.date > starting_date:
+                for sale in order.sales:
+                    sales[order.date.month - current_month] += sale.quantity
+
+        sales.reverse()
+        return labels, sales
 
 
 class Charity(Document):
