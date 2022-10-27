@@ -301,6 +301,7 @@ def edit_sale(time: date = Form(None), element_id: str = Form(None), quantity = 
     orders = models.Orders.objects.get(user_id=user_id)
     order = orders.get_order(time)
     order.modify_sale(element_id, quantity)
+    orders.save()
 
     return RedirectResponse(f"../sales?time={time}", status_code=302)
 

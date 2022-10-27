@@ -64,7 +64,7 @@
                         <a class="mdc-drawer-link" href="/sales">
                             <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon"
                                 aria-hidden="true">grid_on</i>
-                            sales
+                                Sales
                         </a>
                     </div>
                     <div class="mdc-list-item mdc-drawer-item">
@@ -375,7 +375,7 @@
             labels: {{monthly_labels|tojson}},
             datasets: [{
                 label: "Monthly Sales",
-                data: {{monthly_sales}}, // Rayan pass data here
+                data: {% if monthly_sales|string  != "[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]" %}{{monthly_sales}}{% else %}[] {% endif %}, // Rayan pass data here
                 borderColor: "#3e95cd",
                 //fill: false
             },

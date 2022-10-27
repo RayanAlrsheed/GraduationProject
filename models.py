@@ -280,7 +280,7 @@ class Orders(Document):
         sales = []
         for order in self.orders:
             if time >= order.date >= time - timedelta(days=6):
-                day = (time - order.date).days
+                day = 6 - (time - order.date).days
                 for sale in order.sales:
                     if not self._is_added_to_sales(sale.element_id, sales):
                         sales.append({"element_id": sale.element_id, "sales": [0, 0, 0, 0, 0, 0, 0], "total": 0})
