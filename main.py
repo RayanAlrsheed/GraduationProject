@@ -2,7 +2,7 @@ import os
 from json import loads
 from bson import ObjectId
 from fastapi import FastAPI, Depends, Request
-from CONFIG import CONNECTION_URL
+# from CONFIG import CONNECTION_URL
 from mongoengine import connect
 from starlette.responses import RedirectResponse
 import models
@@ -18,7 +18,7 @@ from API import router as api_router
 
 app = FastAPI()
 app.include_router(api_router)
-# CONNECTION_URL = os.environ.get("CONNECTION_URL")
+CONNECTION_URL = os.environ.get("CONNECTION_URL")
 
 connect(db='GraduationProject', host=CONNECTION_URL)
 
