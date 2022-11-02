@@ -254,10 +254,7 @@ class Orders(Document):
         for order in self.orders:
             if order.date == date:
                 if order.remove_sale(element_id):
-                    if not order.sales:
-                        self.delete()
-                    else:
-                        self.save()
+                    self.save()
                     return True
 
         return False

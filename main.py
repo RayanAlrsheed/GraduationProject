@@ -2,7 +2,7 @@ import os
 from json import loads
 from bson import ObjectId
 from fastapi import FastAPI, Depends, Request
-# from CONFIG import CONNECTION_URL
+from CONFIG import CONNECTION_URL
 from mongoengine import connect
 from starlette.responses import RedirectResponse
 import models
@@ -18,7 +18,7 @@ from API import router as api_router
 
 app = FastAPI()
 app.include_router(api_router)
-CONNECTION_URL = os.environ.get("CONNECTION_URL")
+# CONNECTION_URL = os.environ.get("CONNECTION_URL")
 
 connect(db='GraduationProject', host=CONNECTION_URL)
 
@@ -34,7 +34,7 @@ def get_config():
     return Settings()
 
 @app.exception_handler(AuthJWTException)
-def authjwt_exception_handler(request: Request, exc: AuthJWTException):
+async def authjwt_exception_handler(request: Request, exc: AuthJWTException):
     print(exc)
     return RedirectResponse("/login", status_code=302)
 
@@ -45,7 +45,7 @@ def from_document_to_dict(document):
 
 
 @app.get("/register")
-def register_page(request: Request, error=None):
+async def register_page(request: Request, error=None):
     load = {"request": request}
     if error == "empty":
 
@@ -66,7 +66,7 @@ def register_page(request: Request, error=None):
     return templates.TemplateResponse("Sinup.html", load)
 
 @app.get("/login")
-def login_page(request: Request, error=None):
+async def login_page(request: Request, error=None):
     load = {"request": request}
     if error == "email":
 
@@ -76,7 +76,7 @@ def login_page(request: Request, error=None):
     return templates.TemplateResponse("login.html", load)
 
 @app.get("/logout")
-def logout(authorize: AuthJWT = Depends()):
+async def logout(authorize: AuthJWT = Depends()):
     authorize.jwt_required()
 
     authorize.unset_jwt_cookies()
@@ -84,7 +84,7 @@ def logout(authorize: AuthJWT = Depends()):
     return RedirectResponse("/login")
 
 @app.get("/")
-def main_page(request: Request, authorize: AuthJWT = Depends()):
+async def main_page(request: Request, authorize: AuthJWT = Depends()):
     authorize.jwt_required()
 
     user = models.User.objects.get(id=authorize.get_jwt_subject())
@@ -119,7 +119,7 @@ def main_page(request: Request, authorize: AuthJWT = Depends()):
 
 
 @app.get("/add_charity")
-def add_charity(request: Request, authorize: AuthJWT = Depends()):
+async def add_charity(request: Request, authorize: AuthJWT = Depends()):
     authorize.jwt_required()
     user = models.User.objects.get(id=authorize.get_jwt_subject())
     if not user.is_admin():
@@ -129,7 +129,7 @@ def add_charity(request: Request, authorize: AuthJWT = Depends()):
 
 
 @app.get("/edit_charity")
-def edit_charity(request: Request, id=None, authorize: AuthJWT = Depends()):
+async def edit_charity(request: Request, id=None, authorize: AuthJWT = Depends()):
     authorize.jwt_required()
     user = models.User.objects.get(id=authorize.get_jwt_subject())
     if not user.is_admin():
@@ -147,7 +147,7 @@ def edit_charity(request: Request, id=None, authorize: AuthJWT = Depends()):
     return templates.TemplateResponse("add_charity_admin.html", load)
 
 @app.get("/charity")
-def charities(request: Request, authorize: AuthJWT = Depends()):
+async def charities(request: Request, authorize: AuthJWT = Depends()):
     authorize.jwt_required()
     user = models.User.objects.get(id=authorize.get_jwt_subject())
     first_name = user.first_name
@@ -168,7 +168,7 @@ def charities(request: Request, authorize: AuthJWT = Depends()):
 
 
 @app.get("/menu")
-def menu(request:Request, authorize: AuthJWT = Depends()):
+async def menu(request:Request, authorize: AuthJWT = Depends()):
     authorize.jwt_required()
 
     user = models.User.objects.get(id=authorize.get_jwt_subject())
@@ -187,7 +187,7 @@ def menu(request:Request, authorize: AuthJWT = Depends()):
     return templates.TemplateResponse("Menu.html", {"request":request, "elements": menu_list, "first_name": first_name, "last_name": last_name})
 
 @app.get("/menu/add")
-def add_element(request:Request, authorize: AuthJWT = Depends()):
+async def add_element(request:Request, authorize: AuthJWT = Depends()):
     authorize.jwt_required()
 
     user = models.User.objects.get(id=authorize.get_jwt_subject())
@@ -198,7 +198,7 @@ def add_element(request:Request, authorize: AuthJWT = Depends()):
 
 
 @app.get("/menu/edit")
-def edit_element(request:Request, authorize: AuthJWT = Depends(), element_id=None):
+async def edit_element(request:Request, authorize: AuthJWT = Depends(), element_id=None):
     authorize.jwt_required()
 
     user = models.User.objects.get(id=authorize.get_jwt_subject())
@@ -221,7 +221,7 @@ def edit_element(request:Request, authorize: AuthJWT = Depends(), element_id=Non
 
 
 @app.get("/edit_ingredient")
-def edit_ingredient(request:Request, authorize: AuthJWT = Depends(), element_id=None, number:int=None):
+async def edit_ingredient(request:Request, authorize: AuthJWT = Depends(), element_id=None, number:int=None):
     authorize.jwt_required()
 
     user = models.User.objects.get(id=authorize.get_jwt_subject())
@@ -243,7 +243,7 @@ def edit_ingredient(request:Request, authorize: AuthJWT = Depends(), element_id=
 
 
 @app.get("/sales")
-def sales(request:Request, authorize: AuthJWT = Depends(), time: date=None):
+async def sales(request:Request, authorize: AuthJWT = Depends(), time: date=None):
     authorize.jwt_required()
 
     user = models.User.objects.get(id=authorize.get_jwt_subject())
@@ -294,7 +294,7 @@ def sales(request:Request, authorize: AuthJWT = Depends(), time: date=None):
     return templates.TemplateResponse("sales.html", load)
 
 @app.get("/edit_sale")
-def edit_sale(request:Request, authorize: AuthJWT = Depends(), time: date=None, element_id=None):
+async def edit_sale(request:Request, authorize: AuthJWT = Depends(), time: date=None, element_id=None):
     authorize.jwt_required()
 
     user = models.User.objects.get(id=authorize.get_jwt_subject())
@@ -326,7 +326,7 @@ def edit_sale(request:Request, authorize: AuthJWT = Depends(), time: date=None, 
 
 
 @app.get("/upload")
-def upload(request:Request, authorize: AuthJWT = Depends(), error=None):
+async def upload(request:Request, authorize: AuthJWT = Depends(), error=None):
     authorize.jwt_required()
 
     user = models.User.objects.get(id=authorize.get_jwt_subject())
@@ -339,7 +339,7 @@ def upload(request:Request, authorize: AuthJWT = Depends(), error=None):
     return templates.TemplateResponse("upload.html", load)
 
 @app.get("/settings")
-def settings(request: Request, authorize: AuthJWT = Depends(), error = None):
+async def settings(request: Request, authorize: AuthJWT = Depends(), error = None):
     authorize.jwt_required()
     user_id = authorize.get_jwt_subject()
     try:
