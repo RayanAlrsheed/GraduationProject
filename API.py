@@ -1,24 +1,17 @@
-import codecs
 import csv
 from io import StringIO
 from fastapi import APIRouter, Depends, Form, Request, UploadFile, File
 from fastapi.templating import Jinja2Templates
-import starlette.status as status
 from passlib.context import CryptContext
-import zipfile
 import models
 import re
-from auth import AuthHandler
 from mongoengine.queryset.visitor import Q
 from datetime import datetime
 from fastapi.responses import RedirectResponse, Response
-from schemas import RegistrationDetails, LoginDetails
 from fastapi_jwt_auth import AuthJWT
 from schemas import Settings
 from bson import ObjectId
 from datetime import date
-from typing import Optional
-import time
 
 templates = Jinja2Templates(directory="html")
 router = APIRouter(prefix="/api")
