@@ -93,7 +93,6 @@ async def register(first_name: str = Form(None),
 
 @router.post("/login")
 async def login(email: str = Form(None), password : str = Form(None), test: bool = Form(False), authorize: AuthJWT = Depends()):
-    print(email, password)
     if not email or not password:
         pass
 
@@ -131,7 +130,6 @@ async def logout(authorize: AuthJWT = Depends()):
 @router.post("/add_element")
 async def add_element(element_id: str = Form(None), name: str = Form(None), test: bool = Form(False), authorize: AuthJWT = Depends()):
     authorize.jwt_required()
-    print(1)
     user_id = ObjectId(authorize.get_jwt_subject())
     restaurant = models.Restaurant.objects.get(user_id=user_id)
 
@@ -145,7 +143,7 @@ async def add_element(element_id: str = Form(None), name: str = Form(None), test
 
     if test:
         return Response(status_code=200)
-    return RedirectResponse("../menu", status_code=302)
+    return RedirectResponse(f"../menu/edit?element_id={element_id}", status_code=302)
 
 
 @router.post("/edit_element")
@@ -199,13 +197,15 @@ async def add_ingredient(element_id: str = Form(None), name: str = Form(None), q
         return RedirectResponse("/dashboard/menu")
 
     if quantity:
+
         try:
             quantity = float(quantity)
+            if quantity < 0:
+                raise Exception
         except:
             if test:
                 return Response(status_code=400)
-            RedirectResponse(f"../menu/edit?element_id={element_id}")
-
+            return RedirectResponse(f"../menu/edit?element_id={element_id}", status_code=302)
     if not restaurant.add_ingredient(element_id, name, quantity, unit) and test:
         return Response(status_code=400)
 
@@ -224,15 +224,17 @@ async def edit_ingredient(element_id: str = Form(None), number: int = Form(None)
     if quantity:
         try:
             quantity = float(quantity)
+            if quantity < 0:
+                raise Exception
         except:
             if test:
                 return Response(status_code=400)
-            RedirectResponse(f"../edit_ingredient?element_id={element_id}&number={number}", status_code=302)
+            return RedirectResponse(f"../edit_ingredient?element_id={element_id}&number={number}", status_code=302)
 
     if not (quantity and name and unit):
         if test:
             return Response(status_code=400)
-        return RedirectResponse("/menu")
+        return RedirectResponse("/menu", status_code=302)
 
     if not  restaurant.modify_ingredient(element_id, number, name, quantity, unit) and test:
         return Response(status_code=400)
@@ -427,7 +429,6 @@ async def update_settings(first_name: str = Form(None),
     except Exception as e:
         if test:
             return Response(status_code=400)
-        print(e)
         return RedirectResponse("../", status_code=302)
 
     if not (first_name and last_name and email and phone and location and phone and (not ((password and not password2) or (not password and password2)))):
@@ -491,12 +492,24 @@ async def upload_file(file: UploadFile = File(), test: bool = Form(False),  auth
     except Exception as e:
         if test:
             return Response(status_code=400)
-        print(e)
         return RedirectResponse("/upload?error=file", status_code=302)
 
     if test:
         return Response(status_code=200)
     return RedirectResponse("/upload", status_code=302)
+
+
+@router.post("/predict")
+async def predict(authorize: AuthJWT = Depends()):
+    authorize.jwt_required()
+    user_id = ObjectId(authorize.get_jwt_subject())
+    try:
+        predictions = models.Prediction.objects.get(user_id=user_id)
+    except Exception:
+        predictions = models.Prediction(user_id=user_id)
+        predictions.save()
+    predictions.predict()
+    return RedirectResponse("/", status_code=302)
 
 @router.post("/delete")
 async def delete(test: bool = Form(False), authorize: AuthJWT = Depends()):

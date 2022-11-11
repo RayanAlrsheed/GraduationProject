@@ -97,15 +97,41 @@ async def main_page(request: Request, authorize: AuthJWT = Depends()):
         monthly_labels, monthly_sales = orders.get_monthly_sales()
 
         weekly_labels, weekly_sales = orders.get_most_sales_in_week()
-
-        return templates.TemplateResponse("index.html", {"request": request,
+        load = {"request": request,
                                                          "first_name": first_name,
                                                          "last_name": last_name,
                                                          "monthly_labels": monthly_labels,
                                                          "monthly_sales": monthly_sales,
                                                          "weekly_labels": weekly_labels,
                                                          "weekly_sales": weekly_sales
-                                                         })
+                                                         }
+        ingredients = []
+        try:
+            predictions = models.Prediction.objects.get(user_id=ObjectId(authorize.get_jwt_subject()))
+            latest_prediction = predictions.get_latest_prediction()
+
+            if latest_prediction:
+                restaurant = models.Restaurant.objects.get(user_id=ObjectId(authorize.get_jwt_subject()))
+                for element in restaurant.menu:
+                    for predicted_element in latest_prediction.sales:
+                        if element.element_id == predicted_element.element_id:
+                            for ingredient in element.ingredients:
+                                to_add = predicted_element.quantity * ingredient.quantity
+                                added = False
+                                for i, existing_ingredient in enumerate(ingredients):
+                                    if existing_ingredient["name"] == ingredient.name:
+                                        ingredients[i]["quantity"] += round(to_add, 2)
+                                        added = True
+                                        break
+
+                                if not added:
+                                    ingredients.append({"name": ingredient.name, "quantity": round(to_add, 2), "unit": ingredient.unit})
+        except Exception as e:
+            pass
+        if ingredients:
+            load["ingredients"] = ingredients
+
+        return templates.TemplateResponse("index.html", load)
 
     charity_list = models.Charity.objects.all()
     charity_list = from_document_to_dict(charity_list)
@@ -243,7 +269,7 @@ async def edit_ingredient(request:Request, authorize: AuthJWT = Depends(), eleme
 
 
 @app.get("/sales")
-async def sales(request:Request, authorize: AuthJWT = Depends(), time: date=None):
+async def sales(request:Request, authorize: AuthJWT = Depends(), time: date=date.today()):
     authorize.jwt_required()
 
     user = models.User.objects.get(id=authorize.get_jwt_subject())

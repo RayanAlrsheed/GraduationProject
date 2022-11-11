@@ -314,6 +314,7 @@
                         </div>
                     </div>
                 </div>
+                {% if ingredients %}
                 <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12 mt-5">
                     <div class="mdc-card p-0">
                         <h6 class="card-title card-padding pb-0 w-50" sytle="padding-right: 0%">Recommendation</h6>
@@ -327,23 +328,26 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    
+                                    {% for ingredient in ingredients %}
                                     <tr>
-                                        <td class="text-left">Meat</td>
-                                        <td class="text-left">16KG</td>
+                                        <td class="text-left">{{ ingredient.name}}</td>
+                                        <td class="text-left">{{ingredient.quantity}} {{ingredient.unit}}</td>
                                     </tr>
-                                    
+                                    {% endfor %}
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
+                {% endif %}
                 <div class="w-100 mt-3">
                     Did you upload your sales? 
                     <br>
+                    <form action="/api/predict" method="post">
                     <button class="mdc-button mdc-button--raised justify-content-center mt-3" style="margin-left: auto;">
                         Recommend
                     </button>
+                    </form>
                 </div>
             </main>
             <!-- partial:partials/_footer.html -->
