@@ -298,6 +298,8 @@ class Orders(Document):
         for order in self.orders:
             if order.date == date:
                 if order.remove_sale(element_id):
+                    if len(order.sales) == 0:
+                        self.orders.remove(order)
                     self.save()
                     return True
 
@@ -434,6 +436,7 @@ class Prediction(Document):
             return True
 
         except Exception as e:
+            print(e.args)
             return False
 
 
