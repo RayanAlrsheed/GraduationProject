@@ -136,7 +136,7 @@ async def add_element(element_id: str = Form(None), name: str = Form(None), test
     if not (element_id and name):
         if test:
             return Response(status_code=400)
-        return RedirectResponse("/dashboard/menu")
+        return RedirectResponse("/menu", status_code=302)
 
     if not restaurant.add_element(element_id, name) and test:
         return Response(status_code=400)
@@ -194,7 +194,7 @@ async def add_ingredient(element_id: str = Form(None), name: str = Form(None), q
     if not (quantity and name and unit):
         if test:
             return Response(status_code=400)
-        return RedirectResponse("/dashboard/menu")
+        return RedirectResponse(f"../menu/edit?element_id={element_id}", status_code=302)
 
     if quantity:
 
@@ -253,7 +253,7 @@ async def remove_ingredient(element_id: str = Form(None), number: int = Form(Non
     if not element_id:
         if test:
             return Response(status_code=400)
-        return RedirectResponse("/menu")
+        return RedirectResponse("/menu", status_code=302)
 
     if not restaurant.remove_ingredient(element_id, number) and test:
         return Response(status_code=400)
