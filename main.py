@@ -130,7 +130,7 @@ async def main_page(request: Request, authorize: AuthJWT = Depends()):
             pass
 
         for i, ingredient in enumerate(ingredients):
-            ingredients[i] = round(ingredient, 2)
+            ingredients[i]["quantity"] = round(ingredient["quantity"], 2)
 
         if ingredients:
             load["ingredients"] = ingredients
