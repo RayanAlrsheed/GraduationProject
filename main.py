@@ -400,3 +400,19 @@ async def settings(request: Request, authorize: AuthJWT = Depends(), error = Non
         load["message"] = "please enter your phone number correctly"
 
     return templates.TemplateResponse("Settings.html", load)
+
+@app.get("reset")
+def reset(request: Request, authorize: AuthJWT = Depends()):
+
+    authorize.jwt_required()
+    user_id = ObjectId(authorize.get_jwt_subject())
+
+    orders = models.Orders.objects.get(user_id=user_id)
+    orders.orders = []
+    orders.save()
+
+    predictions = models.Prediction.objects.get(user_id=user_id)
+    predictions.orders = []
+    predictions.save()
+
+    return RedirectResponse("/", status_code=302)
