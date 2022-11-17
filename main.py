@@ -2,7 +2,7 @@ import os
 from json import loads
 from bson import ObjectId
 from fastapi import FastAPI, Depends, Request
-# from CONFIG import CONNECTION_URL
+from CONFIG import CONNECTION_URL
 from mongoengine import connect
 from starlette.responses import RedirectResponse
 import models
@@ -18,7 +18,7 @@ from API import router as api_router
 
 app = FastAPI()
 app.include_router(api_router)
-CONNECTION_URL = os.environ.get("CONNECTION_URL")
+# CONNECTION_URL = os.environ.get("CONNECTION_URL")
 
 connect(db='GraduationProject', host=CONNECTION_URL)
 
@@ -109,7 +109,7 @@ async def main_page(request: Request, authorize: AuthJWT = Depends()):
         try:
             predictions = models.Prediction.objects.get(user_id=ObjectId(authorize.get_jwt_subject()))
             latest_prediction = predictions.get_latest_prediction()
-
+            time = latest_prediction.date
             if latest_prediction:
                 restaurant = models.Restaurant.objects.get(user_id=ObjectId(authorize.get_jwt_subject()))
                 for element in restaurant.menu:
@@ -129,11 +129,14 @@ async def main_page(request: Request, authorize: AuthJWT = Depends()):
         except Exception as e:
             pass
 
-        for i, ingredient in enumerate(ingredients):
-            ingredients[i]["quantity"] = round(ingredient["quantity"], 2)
 
         if ingredients:
+
+            for i, ingredient in enumerate(ingredients):
+                ingredients[i]["quantity"] = round(ingredient["quantity"], 2)
+
             load["ingredients"] = ingredients
+            load["date"] = time
 
         return templates.TemplateResponse("index.html", load)
 

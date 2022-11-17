@@ -367,6 +367,7 @@
                                                         </tbody>
                                                     </table>
                                                 </div>
+
                                                 {% endif %}
                                                 {% if unused is defined %}
                                                 <form action="/api/add_sale" method="POST">
@@ -428,12 +429,33 @@
                                                         </div>
                                                     </div>
                                                 </form>
-                                                    {% endif %}
-                                                </div>
+                                                {% if sales is not defined %}
+                                                <div class="w-100 mt-3">
+                                                    Remove all sales
+                                                    <br>
+                                                    <button class="mdc-button mdc-button--raised justify-content-center mt-3" style="margin-left: auto;" onclick="remove()">
+                                                        Remove
+                                                    </button>
                                             </div>
-                                        </div>
+                                                {% endif %}
 
+                                                </div>
+                                                    {% endif %}
+
+                                                </div>
+                                                
+                                            </div>
+                                            
+                                        </div>
+                                        {% if sales is defined %}
+                                        <div class="w-100 mt-3">
+                                            Remove all sales
+                                            <br>
+                                            <button class="mdc-button mdc-button--raised justify-content-center mt-3" style="margin-left: auto;" onclick="remove()">
+                                                Remove
+                                            </button>
                                     </div>
+                                    {% endif %}
                             </main>
                         </div>
                     </div>
@@ -636,6 +658,9 @@
                     <!--                        </div>-->
             </div>
         </div>
+
+
+
         </main>
         <!-- partial:partials/_footer.html -->
 
@@ -658,6 +683,14 @@
     <!-- Custom js for this page-->
     <script src={{ url_for('static', path='js/dashboard.js') }}></script>
     <!-- End custom js for this page-->
+
+    <script>
+        function remove(){
+            if (confirm("Do you want to remove all sales?")){
+                window.location.href = "/reset"
+            }
+        }
+    </script>
 </body>
 
 </html>
