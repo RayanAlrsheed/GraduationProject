@@ -128,6 +128,10 @@ async def main_page(request: Request, authorize: AuthJWT = Depends()):
                                     ingredients.append({"name": ingredient.name, "quantity": round(to_add, 2), "unit": ingredient.unit})
         except Exception as e:
             pass
+
+        for i, ingredient in enumerate(ingredients):
+            ingredients[i] = round(ingredient, 2)
+
         if ingredients:
             load["ingredients"] = ingredients
 
