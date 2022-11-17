@@ -401,7 +401,7 @@ async def settings(request: Request, authorize: AuthJWT = Depends(), error = Non
 
     return templates.TemplateResponse("Settings.html", load)
 
-@app.get("reset")
+@app.get("/reset")
 def reset(request: Request, authorize: AuthJWT = Depends()):
 
     authorize.jwt_required()
