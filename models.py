@@ -428,7 +428,7 @@ class Prediction(Document):
                     if sale.element_id == element:
                         features[3] = sale.quantity
 
-                order.add_sale(element, model.predict(features))
+                order.add_sale(element, round(model.predict(features), 2))
                 features[element_ids[element]] = 0
 
             self.orders.append(order)
